@@ -3,12 +3,14 @@ import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import pg from "pg";
+import env from "dotenv";
 
+env.config();
 const db=new pg.Client({
     user: "postgres",
     host: "localhost",
     database: "The DOMinators",
-    password: "nidhish3",
+    password: process.env.POSTGRESQL_Password,
     port: 5432
 });
 const __dirname=dirname(fileURLToPath(import.meta.url));
