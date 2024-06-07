@@ -9,8 +9,8 @@ env.config();
 const db=new pg.Client({
     user: "postgres",
     host: "localhost",
-    database: "The DOMinators",
-    password: process.env.POSTGRESQL_Password,
+    database: "postgres",
+    password: "veda123",
     port: 5432
 });
 const __dirname=dirname(fileURLToPath(import.meta.url));
@@ -40,7 +40,7 @@ app.post("/login",async (req,res) =>{
             res.redirect("/");
         }
         else{
-            response="Username and Password does not match. Try Again.";
+            response="INVALID CREDENTIALS!!. Try Again.";
             res.redirect("/");
         }
     }
