@@ -2,22 +2,22 @@ import express from "express";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
-import pg from "pg";
+import mysql from "mysql2";
 import env from "dotenv";
 
 env.config();
-const db=new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "The DOMinators",
-    password: process.env.POSTGRESQL_Password,
-    port: 5432
+const db1=await mysql.createConnection({
+    host: "sql7.freesqldatabase.com",
+    user: "sql7712621",
+    database: "sql7712621",
+    password: "lnzSk48cVz",
+    port: 3306
 });
+db1.connect();
 const __dirname=dirname(fileURLToPath(import.meta.url));
 const port=3000;
 const app=express();
 var response="";
-db.connect();
 
 app.use(express.static('assets'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -32,17 +32,27 @@ app.post("/login",async (req,res) =>{
     const password=req.body.Password;
     try
     {
-        const result=await db.query("SELECT password FROM users WHERE name=$1",[username]);
-        const pass=result.rows[0].password;
-        if(password===pass)
-        {
-            response="Login Successful.";
-            res.redirect("/");
-        }
-        else{
-            response="Username and Password does not match. Try Again.";
-            res.redirect("/");
-        }
+        db1.query("SELECT password FROM users WHERE username=?",[username],function(err,result){
+            if(err) throw err;
+            if(result.length>0)
+            {
+                const pass=result[0].password;
+                if(password===pass)
+                {
+                    response="Login Successful.";
+                    res.redirect("/");
+                }
+                else{
+                    response="Invalid Credentials. Try Again.";
+                    res.redirect("/");
+                }
+            }
+            else
+            {
+                response="User does not exist.";
+                res.redirect("/");
+            }
+        });
     }
     catch(err){
         console.error("Error: ",err.message);
