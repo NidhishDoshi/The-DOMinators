@@ -4,20 +4,22 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import pg from "pg";
 import env from "dotenv";
+import mysql from "mysql2";
 
 env.config();
-const db=new pg.Client({
-    user: "postgres",
-    host: "localhost",
-    database: "postgres",
-    password: "veda123",
-    port: 5432
+const Database = mysql.createConnection({
+    host: "sql7.freesqldatabase.com",
+    user: "sql7712621",
+    database: "sql7712621",
+    password: "lnzSk48cVz",
+    port: 3306
 });
+Database.connect();
 const __dirname=dirname(fileURLToPath(import.meta.url));
 const port=3000;
 const app=express();
 var response="";
-db.connect();
+
 
 app.use(express.static('assets'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -32,7 +34,7 @@ app.post("/login",async (req,res) =>{
     const password=req.body.Password;
     try
     {
-        const result=await db.query("SELECT password FROM users WHERE name=$1",[username]);
+        const result= await Database.query("SELECT password FROM users WHERE name=$1",[username]);
         const pass=result.rows[0].password;
         if(password===pass)
         {
