@@ -5,6 +5,51 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Library Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+      .colour-1{
+        background-image: initial;
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: rgb(44, 70, 122)
+      }
+      .container-foto > .image-box{
+        position: relative;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+      }
+      .card-body article{
+        position: absolute;
+        width: 100%;
+        top: -39%;
+        margin-left: -15px;
+      }
+      .card-body h5 a{
+        text-transform: uppercase;
+        color: #fff !important;
+        letter-spacing: normal;
+        font-weight: bold;
+      }
+      .card-body .icon-sec{
+        padding: 0px;
+        border: 8px solid rgba(255,255,255,0.16);
+        overflow: hidden;
+        width: 90px;
+        height: 90px;
+        position: absolute;
+        left: 50%;
+        margin-left: -40px;
+        top: -45px;
+        box-shadow: 0px 0px 12px 4px rgba(0,0,0,0.1);
+      }
+      a{
+        text-decoration: none !important;
+      }
+    </style>
 </head>
 <body>
     <header class="p-3 text-bg-dark">
@@ -41,6 +86,105 @@
           </div>
         </div>
       </header>
+      <section class="bg-white m-0 p-4">
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4"><div class="col">
+          <div class="card h-100 container_foto overflow-hidden">
+            <div class="image-box colour-1">
+              <img src="https://iimtu.edu.in/blog/wp-content/uploads/2023/11/CSE-aa.jpg" class="card-img-top" alt="Computer Engineering" height="100%" width="100%">
+            </div>
+            <div class="card-body position-relative">
+              <article class="text-center">
+                <h5><a class="link-success" href="/ndl_se">Computer Engineering</a></h5>
+              </article>
+              <a class="link-success" href="/ndl_se"><div class="icon-sec rounded-circle"><img src="https://static.vecteezy.com/system/resources/previews/010/125/950/original/desktop-computer-simple-modern-minimalist-3d-rendering-illustration-free-png.png" alt="Computer Engineering" height="100%" width="100%"></div></a>
+              <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="/se_browse/subjectClass" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Subjects </a> </li>			<li class="p-1"> <a href="/se_browse/educationalLevel" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Educational Levels </a> </li>			<li class="p-1"> <a href="/se_browse/resourceType" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Resource Types </a> </li>			<li class="p-1"> <a href="/se_browse/sourceOrganization" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Content Providers </a> </li>			</ul>
+            </div>
+            <div class="card-footer small text-muted text-center">
+              <a class="link-success" href="/ndl_se"><i class="fa-solid fa-layer-group"></i> Explore More Contents</a>
+            </div>
+          </div>
+        </div><div class="col">
+          <div class="card h-100 container_foto overflow-hidden">
+            <div class="image-box colour-2">
+              <img src="https://www.discoverengineering.org/wp-content/uploads/2023/12/mj_11235_4.jpg" class="card-img-top" alt="Mechanical Engineering" height="115%" width="100%">
+            </div>
+            <div class="card-body position-relative">
+              <article class="text-center">
+                <h5><a class="link-success" href="/ndl_he">Mechanical Engineering</a></h5>
+              </article>
+              <a class="link-success" href="/ndl_he"><div class="icon-sec rounded-circle my-2"><img src="https://w7.pngwing.com/pngs/811/217/png-transparent-mechanical-engineering-electrical-engineering-technology-electronics-text-logo-thumbnail.png" alt="Mechanical Engineering" height="100%" width="100%"></div></a>
+              <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="/he_browse/ddc" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Subjects </a> </li>			<li class="p-1"> <a href="/he_browse/learningResourceType" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Resource Types </a> </li>			<li class="p-1"> <a href="/he_browse/sourceOrganization" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Content Providers </a> </li>			<li class="p-1"> <a href="/he_browse/educationalLevel" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Educational Levels </a> </li>			</ul>
+            </div>
+            <div class="card-footer small text-muted text-center">
+              <a class="link-success" href="/ndl_he"><i class="fa-solid fa-layer-group"></i> Explore More Contents</a>
+            </div>
+          </div>
+        </div><div class="col">
+          <div class="card h-100 container_foto overflow-hidden">
+            <div class="image-box colour-3">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT9uEjmOGJmEMUfZMN-HZgJKZHN0m6fLGdYsA&s" class="card-img-top" alt="Electrical Engineering" height="115%" width="100%">
+            </div>
+            <div class="card-body position-relative">
+              <article class="text-center">
+                <h5><a class="link-success" href="/ndl_re">Electrical Engineering</a></h5>
+              </article>
+              <a class="link-success" href="/ndl_re"><div class="icon-sec rounded-circle"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvTYvEpT1yVgi0c3O0-CzRjeD7edoSx0orhA&s" alt="Electrical Engineering" height="100%" width="100%"></div></a>
+              <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="/re_browse/asjc" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Subjects </a> </li>			<li class="p-1"> <a href="/re_browse/sourceOrganization" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Content Providers </a> </li>			<li class="p-1"> <a href="/re_browse/learningResourceType" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Resource Types </a> </li>			<li class="p-1"> <a href="/re_browse/journal" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Journals </a> </li>			</ul>
+            </div>
+            <div class="card-footer small text-muted text-center">
+              <a class="link-success" href="/ndl_re"><i class="fa-solid fa-layer-group"></i> Explore More Contents</a>
+            </div>
+          </div>
+        </div><div class="col">
+          <div class="card h-100 container_foto overflow-hidden">
+            <div class="image-box colour-4">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmY4t78Yl3KiRKnYCfpR6x3RFrUgDnenGzlQ&s" class="card-img-top" alt="Civil Engineering" height="98%" width="100%">
+            </div>
+            <div class="card-body position-relative">
+              <article class="text-center">
+                <h5><a class="link-success" href="/ndl_cd">Civil Engineering</a></h5>
+              </article>
+              <a class="link-success" href="/ndl_cd"><div class="icon-sec rounded-circle"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVKdep0EcllAOFM77Db6S-zR0AwXxIK8kEEA&s" alt="Civil Engineering" height="100%" width="100%"></div></a>
+              <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="/cd_browse/sourceOrganization" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Examinations </a> </li>			<li class="p-1"> <a href="/cd_browse/learningResourceType" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Resource Types </a> </li>			</ul>
+            </div>
+            <div class="card-footer small text-muted text-center">
+              <a class="link-success" href="/ndl_cd"><i class="fa-solid fa-layer-group"></i> Explore More Contents</a>
+            </div>
+          </div>
+        </div><div class="col">
+          <div class="card h-100 container_foto overflow-hidden">
+            <div class="image-box colour-5">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSPoCSwTmL4zZuZwV6tJbdMKSX245qNFSC9ng&s" class="card-img-top" alt="Chemical Engineering" height="115%" width="100%">
+            </div>
+            <div class="card-body position-relative">
+              <article class="text-center">
+                <h5><a class="link-success" href="/ndl_ch">Chemical Engineering</a></h5>
+              </article>
+              <a class="link-success" href="/ndl_ch"><div class="icon-sec rounded-circle"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbbHeToo7hb5Yp_qTQcHwyEL1GekOtn6epyw&s" alt="Chemical Engineering" height="100%" width="100%"></div></a>
+              <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="/ch_browse/sourceOrganization" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Content Providers </a> </li>			<li class="p-1"> <a href="/ch_browse/learningResourceType" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Resource Types </a> </li>			</ul>
+            </div>
+            <div class="card-footer small text-muted text-center">
+              <a class="link-success" href="/ndl_ch"><i class="fa-solid fa-layer-group"></i> Explore More Contents</a>
+            </div>
+          </div>
+        </div><div class="col">
+          <div class="card h-100 container_foto overflow-hidden">
+            <div class="image-box colour-6">
+              <img src="https://ndl.iitkgp.ac.in/assets/img/domains/nw-back.jpg" class="card-img-top" alt="Newspaper Archives" height="100%" width="100%">
+            </div>
+            <div class="card-body position-relative">
+              <article class="text-center">
+                <h5><a class="link-success" href="/ndl_nw">Newspaper Archives</a></h5>
+              </article>
+              <a class="link-success" href="/ndl_nw"><div class="icon-sec rounded-circle"><img src="https://ndl.iitkgp.ac.in/assets/img/domains/nw-icon.svg" alt="Newspaper Archives" height="100%" width="100%"></div></a>
+              <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="/nw_browse/sourceOrganization" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Content Providers </a> </li>			<li class="p-1"> <a href="/nw_browse/newspaper" class="link-primary"> <i class="fa-xs fa-solid fa-caret-right"></i> Newspapers </a> </li>			</ul>
+            </div>
+            <div class="card-footer small text-muted text-center">
+              <a class="link-success" href="/ndl_nw"><i class="fa-solid fa-layer-group"></i> Explore More Contents</a>
+            </div>
+          </div>
+        </div>	</div>
+      </section>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
