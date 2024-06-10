@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .header{
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card offset-md-2 col-md-8 mt-2 mb-2">
+        <div class="card-header header mt-4">
+            <img class="fa-solid fa-user-plus" width="30px" height="25px" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAAilBMVEUAAAD///8BAQH7+/v+/v78/Pz9/f23t7dZWVmwsLDW1tbu7u719fXT09P4+PgYGBhtbW2bm5vh4eFjY2OQkJDNzc1ycnJeXl6/v799fX2qqqqIiIhPT08oKCgTExPp6emUlJQ/Pz8gICAvLy84ODhKSkojIyOhoaEuLi55eXk3NzcMDAsVFRZTU1IcGlaxAAATCElEQVR4nN1da3ujLBOGqjHRJE1NbE5N07Sbzbbd/v+/96ocRAEZDmaf6/XDhq0DzM0MDDrjgBLcXEk0IYUoipvfOIrIHyZRnyShJDJtXFMsi/R2nF5+v34/fL8+fr08P83KOSWoaRNdu3JzFrRaNpEXQNylxfic7i9Idf1ePWVzV6Yn5rHVN4esa+pps82VwHl4QL1Cc51WuyUbCh+pWNHGyAMgFmnnTyfEcT1okT4vrAF6SRBHyHIYIzXAbNWKaghgdX3M5q2ujg+wRuivJ+WLAEPG1S88Ps3xuABFRUO+c3CCs5dhwSlE+X67F8AYI0fZY0qL81VPM41Im9/XcrxFpssm8pqDcTzrcw8W5eqMtWZVIUFnNpHPMOLzD1xw/QJCqUfXcFrk3gvGqY57ENLKdMSqrlUS9LBmCFpTUlGc7Ie4B4nyVFguMlhDOzCTkP3Q0ML8KnFvmnpVof+HHQYA9NpRIleAxYer4EQShA5mgF7WLEGOKpp9G7kfnoO88BYOoHLDhdwALhCIexDSY9vuCAAre+iiopkM0IhLT7vB/SeqUCpKLL7LHHz1FpxYQE8jAsTIQUXzd4lpn9Wm+p3ZMW3x0MPsoc36i6NfFtwDRVn6GnotQILQbqv2HERw3cJ3joNu1QRaZA3wFkxwYuHKegyzVRNokaXs+TIaaA7y1eboAVCvopPa4ltJMGGT0GurpiQpR5FgUq2lVsqNNyEF1yF5DQBQRYvsnugLN+5BtMcRVBTXCC1qJviq496oiADaLB4BIHsCBso+7TFtxGVFO8X2AM20yKZm8ie84FoSutgEBkgQQmV/6DIdfLW59JgWurZhs0uLTEMj1vxGsKXfxkx0aHchzQQlQRayT8cxE0LhElpFK1pkMTR/Qm/VZNoyDriKEloEr1kG36pJJGiNQwOs7CFY9qvgWzWJFqEcChCszghcM39ADmpnK+RDaIBaL7cs+xny5R4yGD8wgFAVxa2X21gTbxGYaR9RngMDxKjzP73scW6E47ZV6//hgEOqKO55uQdq4t2YghNIttrX/I4vqFRebpXs8T4A9wBahKSufVS0okXQoXkHStB7W7eASxA0GAgIcDmm4DokBzBA2IIkebk1Q1Nac2+UoIZ2HVJFsezl1tU8jG4m2J0/YQG2Ft8g++fRzQQrfOdJOBXF8Li2C2AFCbTQZnFIgF0v94Dsf5s3pYEerei7jDAqSr3cgPU3/zZKMJQoiSMqGEBi8Y2yp+9JxxOcWHhTM+2kohE0ri3OAnEPod2bAIIl2NAiUE3qt7+LxUergCqKWy+3QfalSTxGwcFpV4Ek2PVym5S7HFtwQmHt5yztSxt1/qetWQbiHkKyxuFUFLdxbYaaJUQRA4lyhUMChMa18QihkbZqosVf9Zh2NRO0AIxrk0KEQgtOuLP3Byh6BBFI9vHdLX4gFa293KCaCd21jWsmaGEWFCAorq0m+R1AcEDaMtwcJF5uWM2LgXujeOCDkflJsE8LjWt7vpvF/57H4VQUA+LaaM3DfeYgqt9iBFRRbI5rYzVLhddihDmI6i1N2IgMQ1wbrzlHIbiHSJt8MBRIRcFxbXFEFtM7WHzyRjgcwMlgXJtY86jj3iwVm/mKoC//gACH49o6w7gbU3ACydYZoEbagLg2UmHpzz2I9gBg2kKCkLg2VnM9tpkgv+euBL0B6uPapGG8n5fb92miS6uLa5Nq4jMCM+0xXw/eW7UeQFNcmyB7vPIRD5Q2DzoHa1p1XJuyZkk4MQrOZ76uApoJSquMa9MM42nMOUgKCxzOTFBaVVybbmjS0bZqjPaCA6vocFybXPN17OV0h4MDVMS16ZenJoI2vODaOxft193uAOW4tgHlTpZ/3LkHCLkOoLWVoJnWmL2lMzQ7Z+4BtDySPaCKYm1cm67myzhbNXJlYwDsxbUZZV8McO+50LIvn4Js1QRaZfaWgZobpGPabw4+oO9RJGjI3iLXnCQXB+4BtCxAIThAMa4NVJN/+aQXpVHIStqNmgdvgEJcG3T9vYUTnEB7jS0BgqWtz96iHZqh8Chni5/bMG0hwYHsLQM1eb6yUKsNIi/YRgHYz94CWX/j9mt1LxUV7syU3AcB2MveAhtG3WrjvNl5spSglbTVXm7T0BRw7gGDsbFl2kKCGi+3uWamsgo6OANbtbpwVHIfCmCE3GQvfLTuOwffLAHaSluRvQU0NPh8AnAPQHpwYNpCgiovN7Rm9KJm2k6U5dgAZS+3RfrNozD3jIJTzFeEvgol9yEBCnFt9sPIspm5Pk2g58gSoAubPS+3XQJVPH9xVlHEMtKNqqK47+W2T4F7sFNRAd+KfUw5LsAJcu2FkeTPCIBLAngqDe06PtHLzSFPgNXVZPe0m4OCsx7ctSubyHUOctqKpLyqFFGL9P2JpRMeXUUj0cvtlaV5wbPsGs3E5cAy0I5sJvpebicV5elWqvl4OwkwVCra/PuZVQ2Hdr4MNodCSJC6xIq3L75SyhJE6O9qx2kdmXZgE9nXHMgQi4vd/vqNFNfX9pZ1mrsXQG7xHSSYdCXImc6L2Wa/vZwapI+/fp6Pt8W5zf48gvNlsDloXNugBHtMsz9Hy/mSzrlJ7A7Qz5olyHVoADmd4qSvxXdXUeLl9gXorM53AGgT16YFCFe7sHEy0LFF9z+O4Z4qKnq5/w8BEjbRvQDe30x0vdz/SYCeZoKSmOLaAq+Md56DHKHfVu0/PAcxBse1+andP5uD1OKH2aoJOxlx70b+ghkt7tKOPQdrNkFxbaBFht2Z53leLMpdOjvMZmm625VFnlcbVAHxHSUYg+LaAABx/UixmG2e19eT6uEJvV/Wz8dDBbYFeoc5WJPo49pgAJufYrfZXh47iFRPwM3T1GV7TLMu9yOqKB6Ia4MArK75bnNRABt4N9xcv45pzvR2TBXFNqeSyQDP6b6nkjaOGvT+OSsSYQaPoaLYHNemG5p4cbz2cdk5S5t/L8eSzUwAwImLhVLHtQ2aieqf8vndTXAK98X3NI3w0Bxk1zLPuUHqkQwtFbanksV4Uu6H5eTgDZ6mUh46PrbLbPa2+uDj+fizOWRLE5vCeMFOJWvfixZPH0bu9Zqp1WKWt7QHcL7YTJHqmr5lFaGsxQprNhTXJg/NbttnzdvLXV8vZzm+u/pDufrdYpJa+dhrkxH1TyWDSnByOGm784prWyVxH2CM881rt1K/OVQ7QHKVWe3uRwCnkhGA+dPAeHqJ8she8wtrywL6gc66YFV0+3zzqWQNwLyOnHWZYOb5+iYtMjhbw5tDq0JUNHlHaTyVrKn59G3nH7QQ8pv0Ecn8E1k0V/2zXw49qZlPJau/y4NKxX4OyhKcIaSh1bd7wPqU/Ka4tgQvrq7cA2g/+wBztlrbze1roQNoyN4yYSoTVnD8zjruLTK71xafncYfNADFuDZZgjHePTpzDxiMr+WkOwc3yP3Lqm2ifvEwdCoZnm/duYfQnrs7mWStAgju+m+h/C5sIHsLLnVZBvRLvxVt72TA+rhBB6vDaXnGxS4kffYWmmMguOD4nWN3yOcf/nN7JwPUZ2+Z/9gw7cDRhdl3CvAUYuB28rKiy96SPSJlE8GQogKLXc9/hRm4nWRfNV5umr3bbiLYzEF2Xh7reurUnEzL5mILSZ29hX0sOpaZQOjUUVHhKxVPnaG6IUBSZm95MwP044h9a8i6vnmZie6d96gLSRXXJnyBN84cfKB59VjXC1ndPLped2WmyN7CrERowWlVKfpw28noSA5YhCRnb3mzAuiG9CjOQby3AAhBypZpAknK3nJrAYYYTzVtLi4Gwrm0Q2LvXoO0LyKkvpfbxkyAlnMV7acIEP/hXepbQW/Zor7KRXY10T6QL8W6cW0cIMsAOYbg2sJZUFGuNMPtkqj32phPITxMWkhdL/fcimnX1UY8GwDnf0HNpZzNKaTrY5upt+PltjlLxsNwlYKFwm/DtKyQcjanoK7PdFff9XLjpz7dUAFO2/vDL+EBLpkP0/JCytmcgt7AHRnAJq6NAdSmYQ0huLbwJDyh0v2hubmUq90UAbqmHxb34trwh6mmzWqjH4xiImyioAOXMicFniINSbfwhqW4NqajocyE7s4VCwDBmZlSzNicwnh4j+k7VO7lnpzNuOAAB2jZxySN8qxh7TJrUb++nQK73uFeXBs9jDr4HOzTsgwmzXKaw5rjCGupTIFdsyyhzOLTz17H3KqR61GQYO/MyKF2UwYQZvHri36YQy3+pNGXYHNQT0uzddP1bQWag3UhZQCJxTd3zTIWRYgCLEy8BpmDTBjs5cxvwMCR5lLufJlCu14JFn/SjKY/930SFe25laDwzbux3ZR7lyAWv2nuNKFe7gbgPAj3gMF4EABW9gncXMrzJ4MsflPIiJebeBafgBMMQDLc/1oAiFfGVnghZfmTQRaf/Myw4OX+BROGo+CEwkZ4iZKcwM1xi59oLb7M5idu49oyyFoZZLWZ8f3lJFmC23Wx+CQXKrOHG9DsNZIAaDMWzySYYEC73OLHZovP6zzOW4QvyDgiYRZa/txWPwvt1CTKK2UAsTqESNl18zqoQZj36XznoJaWnvdLHvYOcIDU4tfD8zNE1u26YBafv34aeQ5W159lC5As4LJybXFSXdFymSSkECUNNurhnVR3oqRDkpwflV3vWFwbe8k9qpkgrVwFgPV7UhVtc3I1/7KPR1xyF3bCQ2+ZM36SM4Td5mY4IqeSkT3pyGaCFKYCwPoYbBXtWiCBfdEQE4QSDzdM4tpiLPdiyz10MLYi92v17mRt/4FOg1DuuvHgNRY/DPcQEpF73e5kbf+JVY1Q4eFq0hfVcW1nF17doAvcJ3RySLQOp5JVCFWznsgQq48cC20mFNzzBOE92q10KpnxqyIBodjcjSHcjW8mlNzv1bRbbDUHGUJFj83RwjXCdChm24jLivZH5F6ZY5KspRZzkCJU9bhjcW1CNCD7DSo4wfd7mQjiOaiHiSLkX62wAo9Ol+5whL3mMkxOJeMIR56D9e9pLuifZnb8FFl1LRZZ1v4u2nz7BbsjkJR/lT3mxOJHDOGoZoIVcmGCFQNbpf4144G2Vw2FzMN3nlAv90zH0SCvPYBA2rOwgiyRnrb/h5TFwCmsqK6V65J4ueNuDPAYghNoF8ISOfnSNtdvlz0Bx+0TsJkHEvBRx7XNHLl3GYwDf6NUKc/e2C67w3zAUf8Zf+hBhoRd0ZXGTe0AJH3aI+YAY+Jag3XdvmadGmnZtRAQjiy4tsANYrMyFmpaVXMpt4MgL3f9+9o8bU8owhDcQ2jZgVVk6Y++wLMj5YYe5uV+oDEnkztb/KrQyQW5lzRdx32qiGI0dH3DLK5NYfGNuNzn60zcnZRokFYopHxTCnjnTQoFj2vj9nA8wQl3VsL+MoneB2mFQso8x1Avdx3fyePauhZ/5NXmge+ka7XbQLtWeLkNXd+EuLZ7Wvzex5RnYNcM4QRu8XPcxrV1Lb6RV7/5So8IaFdGUNcUYS2VKYzNFXvWZvZwZMEJvF5EgELw7HC7KQMI9XKX7Fn7zha//s0EgO0rbIDFt4hrQy/8Y7aexddVcNJiDe1RfErnBsPQXDeuzdw1O3YoiVRPwH4qahTyY4TF1xBbULuWcW0XDrA+lax9Ah5LRXt30k4cdgFqziqujQftNHFtkztbfNQEJ7YA68h5kMW3iGujT4ZtXBtFaK5pMQaDS38mAsSYf3U/0Byz+Fjr5RYAUh9eG9dG7KGH2tnSdvwz7e50oDm0uj2R6/ZlpCUHgrCXCfwJeKw5qKRddL+lfoMOHL8GAa5FgPe3+E1h20uacrXuWk+LXsU3lhyhV5sOtGXXN5GHW9boy4s2GQbQ4gdeaLm94tmyEdLRWr5zZh9189dB/8Di14XuYoDFYxY8uq4ldewBrLO3aN95q8cI0AuEdo47zhcag+3d9aoPsPZy6995jzMHCclz3322cey6MwZTCWDj5TbkvRhpod3hnvtMPPLEcQ5uZYCNl/vuFr+5XlmSL+4f1J+tCJvbtV7ISaF077wdJ4IFLfMTtnEy7CMvt7lNAxOknEndJ+DRBdchuXUA1k9UOw2tuV2EhGB3EWD8jyw+IVlIadqK0+BkHABIjh1SZL36NxafkjyepWO459JBGZCBQ2gfawAqLf747gt259IeVkI5msCfVh9agPTUGmXestril6NwD6Flhxx3oizmK8t20VOsBtiofm3xI3/uncX+LAGsrkxIOmkGuM+xGqCQvWVt4EjbuNVyrqY9KuJkqkX1B9rckSVs06XWa7K3ZMMjrYcegvYoZSNpHo4zfo7UQLunG8/aq01kSzyWb1Jb91tt6JdQcqTTcnbVtdJcj8esjaLVJ0ekPlltPqHx38BVzwNnFcA6vCTffYo5fNvrNG2OrYEkpyX52qonqG8NR0ZcIebrbCDh5nlx26+u75T++2P6udkVczWtKm8Zz96yTNc8m/P9Xp2ywgbrAGLijIuWy/l8vlzyR2agBKPkfy4gOgg9LNkSAAAAAElFTkSuQmCC">
+            <div class="mx-1">
+                <h4>Account Registration</h4>
+            </div>
+        </div>
+        <div class="card-body">
+            <h6 class="lead pb-1">Account Details</h6>
+            <form action="/signup" method="post">
+                <div class="row mb-2">
+                    <label class="col-md-3 col-form-label form-field-mandatory" for="fname">Name</label>
+                    <div class="col">
+                        <input type="text" class="form-control" name="fname" id="fname" placeholder="First name" aria-label="First name" required="required" maxlength="32">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" name="lname" id="lname" placeholder="Last name" aria-label="Last name" maxlength="32">
+                    </div>
+                </div>
+                <div class="row mb-2">
+                <label class="col-md-3 col-form-label form-field-mandatory" for="mail">Email</label>
+                <div class="col">
+                    <input type="text" class="form-control" name="mail" id="mail" placeholder="Email" aria-label="Email" required="required" maxlength="64" onchange="check_availability()">
+                    <small id="acc-avail"></small>
+                </div>
+            </div>
+            <div class="row mb-2">
+                <label for="password" class="col-md-3 col-form-label form-field-mandatory">Password</label>
+                <div class="col">
+                    <input type="password" class="form-control" id="password" name="pswd" placeholder="Password" aria-label="Password" required="required">
+                </div>
+            </div>
+            <hr>
+            <div>
+                <button id="submit" class="btn btn-success offset-md-5 mb-1 " type="submit">Submit</button>
+            </div>
+        </form>
+        <div class="offset-md-4 mb-1" style="color: red;">
+            <% if(locals.alert){ %>
+            <%= alert %>
+            <form action="/login" method="post" class="mt-1">
+                <button id="redirect" class="btn btn-success offset-md-2 mb-1" type="submit">Login</button>
+            </form>
+            <% } %>
+        </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script>
+        const exist=document.getElementById("redirect");
+        if(exist)
+        {
+            document.getElementById("submit").remove();
+        }
+    </script>
+</body>
+</html>
