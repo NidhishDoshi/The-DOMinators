@@ -7,9 +7,9 @@ import bcrypt from "bcrypt";
 
 const db=mysql.createConnection({
     host: "sql7.freesqldatabase.com",
-    user: "sql7712621",
-    database: "sql7712621",
-    password: "lnzSk48cVz",
+    user: "sql7714106",
+    database: "sql7714106",
+    password: "jFBhbcliJV",
     port: 3306
 });
 db.connect((err)=>{
