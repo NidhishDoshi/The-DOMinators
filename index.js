@@ -39,6 +39,7 @@ const saltRounds=10;
 const app=express();
 var books=[];
 var response="";
+var name="";
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -78,12 +79,13 @@ app.post("/login",async (req,res) =>{
     const password=req.body.Password;
     try
     {
-        db.query("SELECT password FROM users WHERE email=?",[username],function(err,result){
+        db.query("SELECT password FROM users WHERE username=?",[username],function(err,result){
             if(err)
             console.error("Error: ",err);
             if(result.length>0)
             {
                 const pass=result[0].password;
+                name=result[0].fName;
                 bcrypt.compare(password,pass,(err,result)=>{
                     if(err)
                     console.error("Error: ",err);
@@ -92,7 +94,7 @@ app.post("/login",async (req,res) =>{
                         if(result)
                         {
                             response="Login Successful";
-                            res.redirect("/search");
+                            res.redirect("/user_open");
                         }
                         else
                         {
@@ -115,11 +117,13 @@ app.post("/login",async (req,res) =>{
     }
 });
 app.post("/signup",async (req,res)=>{
+    const fName=req.body.fname;
+    const lName=req.body.lname;
     const username=req.body.mail;
     const password=req.body.pswd;
     try
     {
-        db.query("SELECT * FROM users WHERE username=?",[username], function(err,result){
+        db.query("SELECT * FROM users WHERE email=?",[username], function(err,result){
             if(err)
             console.log("Error: ",err);
             if(result.length>0)
@@ -137,8 +141,8 @@ app.post("/signup",async (req,res)=>{
                     {
                         try
                         {
-                            db1.execute("INSERT INTO users(username,password) VALUES (?,?)",[username,hash]);
-                            res.redirect("/search")
+                            db.execute("INSERT INTO users(fName,lName,email,password) VALUES (?,?,?,?)",[fName,lName,username,hash]);
+                            res.redirect("/user_open")
                         }
                         catch(err)
                         {
@@ -157,6 +161,11 @@ app.post("/signup",async (req,res)=>{
 app.get("/search",(req,res)=>{
     res.render(__dirname+"/views/search.ejs",{
         books: books,
+    });
+});
+app.get("/user_open",(req,res)=>{
+    res.render(__dirname+"/views/user_open.ejs",{
+        Name: name,
     });
 });
 app.get("/terms_and_conditions",(req,res)=>{

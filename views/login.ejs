@@ -14,14 +14,13 @@
 </head>
 <body>
     <div class="logo">
-        <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo" height="50px">
+        <a href="https://iitdh.ac.in"><img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo" height="50px"></a>
         <div class="container">
             <h3>Welcome</h3>
             <form action="/login" method="post">
-                <input class="mb-2" placeholder="Username" type="text" name="Username" autofocus required><br/>
+                <input class="mb-2" placeholder="Username" type="email" name="Username" autofocus required><br/>
                 <input class="mb-2" placeholder="Password" type="password" name="Password" id="password_inp" autocomplete="off" required><button class="btn btn-light mx-2 btn-outline-dark" id="toggle_type" type="button">Show Password</button><br/>
                 <button class="btn btn-success" type="submit" required>Login</button><br/>
-                <input type="checkbox" required> I have read and agreed to the Terms and Conditions and Privacy Policy
             </form>
             <h5 style="color: red;" id="response"><%= response %></h5>
             <a><p>Forgot Password?</p></a>
