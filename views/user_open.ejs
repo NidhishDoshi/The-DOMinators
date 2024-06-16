@@ -61,7 +61,15 @@
             <a href="https://iitdh.ac.in" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
               <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo" height="50px">
             </a>
-  
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+              <input type="text" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" list="books">
+              <datalist id="books">
+                  <% if(locals.books) { %>
+                  <% for(var i=0;i<books.length;i++) { %>
+                  <option><%= books[i] %></option>
+                  <% } } %>
+              </datalist>
+            </form>
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
               <li>
                 <a href="#" class="nav-link text-secondary">
@@ -160,7 +168,7 @@
             </div>
             <div class="card-body position-relative">
               <article class="text-center">
-                <h5><a class="link-success" href="#">Computer Engineering</a></h5>
+                <h5><a class="link-success" href="/cs">Computer Engineering</a></h5>
               </article>
               <a class="link-success" href="#"><div class="icon-sec rounded-circle"><img src="https://static.vecteezy.com/system/resources/previews/010/125/950/original/desktop-computer-simple-modern-minimalist-3d-rendering-illustration-free-png.png" alt="Computer Engineering" height="100%" width="100%"></div></a>
               <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="#" class="link-primary"> <c>Subjects</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"><c>Educational Levels</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"><c>Resource Types</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"><c>Content Providers</c> </a> </li>			</ul>
@@ -176,7 +184,7 @@
             </div>
             <div class="card-body position-relative">
               <article class="text-center">
-                <h5><a class="link-success" href="#">Mechanical Engineering</a></h5>
+                <h5><a class="link-success" href="/me">Mechanical Engineering</a></h5>
               </article>
               <a class="link-success" href="#"><div class="icon-sec rounded-circle my-2"><img src="https://w7.pngwing.com/pngs/811/217/png-transparent-mechanical-engineering-electrical-engineering-technology-electronics-text-logo-thumbnail.png" alt="Mechanical Engineering" height="100%" width="100%"></div></a>
               <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="#" class="link-primary"> <c>Subjects</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"> <c>Resource Types</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"><c>Content Providers</c>  </a> </li>			<li class="p-1"> <a href="#" class="link-primary"> <c>Educational Levels</c> </a> </li>			</ul>
@@ -192,7 +200,7 @@
             </div>
             <div class="card-body position-relative">
               <article class="text-center">
-                <h5><a class="link-success" href="#">Electrical Engineering</a></h5>
+                <h5><a class="link-success" href="/ee">Electrical Engineering</a></h5>
               </article>
               <a class="link-success" href="#"><div class="icon-sec rounded-circle"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTvTYvEpT1yVgi0c3O0-CzRjeD7edoSx0orhA&s" alt="Electrical Engineering" height="100%" width="100%"></div></a>
               <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="#" class="link-primary"> <c>Subjects</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"> <c>Content Providers</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"> <c>Resource Types</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"> <c>Journals</c> </a> </li>			</ul>
@@ -208,7 +216,7 @@
             </div>
             <div class="card-body position-relative">
               <article class="text-center">
-                <h5><a class="link-success" href="#">Civil Engineering</a></h5>
+                <h5><a class="link-success" href="/ce">Civil Engineering</a></h5>
               </article>
               <a class="link-success" href="#"><div class="icon-sec rounded-circle"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVKdep0EcllAOFM77Db6S-zR0AwXxIK8kEEA&s" alt="Civil Engineering" height="100%" width="100%"></div></a>
               <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="#" class="link-primary"> <c>Examinations</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"><c>Resource Types</c> </a> </li>			</ul>
@@ -224,7 +232,7 @@
             </div>
             <div class="card-body position-relative">
               <article class="text-center">
-                <h5><a class="link-success" href="#">Chemical Engineering</a></h5>
+                <h5><a class="link-success" href="/ch">Chemical Engineering</a></h5>
               </article>
               <a class="link-success" href="#"><div class="icon-sec rounded-circle"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRbbHeToo7hb5Yp_qTQcHwyEL1GekOtn6epyw&s" alt="Chemical Engineering" height="100%" width="100%"></div></a>
               <ul class="ps-0 pt-5 m-0 list-unstyled">			<li class="p-1"> <a href="#" class="link-primary"><c>Content Providers</c> </a> </li>			<li class="p-1"> <a href="#" class="link-primary"><c>Resource Types</c>  </a> </li>			</ul>
