@@ -1,87 +1,265 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Library Managment Portal</title>
-        <style>
+import express from "express";
+import bodyParser from "body-parser";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+import mysql from "mysql2";
+import bcrypt from "bcrypt";
 
-            body{
-                background-image: url(https://iitdh.ac.in/sites/default/files/styles/inner_page_banner/public/2023-10/slide-01-new_1_0.jpg?itok=twzIhk85);
-                background-size: 100%;
-                background-repeat: no-repeat;
+const db=mysql.createConnection({
+    host: "sql7.freesqldatabase.com",
+    user: "sql7714106",
+    database: "sql7714106",
+    password: "jFBhbcliJV",
+    port: 3306
+});
+db.connect((err)=>{
+    if(err)
+    console.error("Error connecting to the database: ",err);
+});
+db.on('error',(err)=>{
+    console.error("Database Error: ",err);
+    if(err.code=='ECONNRESET')
+    handleDisconnect()
+});
+function handleDisconnect()
+{
+    db.connect((err)=>{
+        if(err)
+        {
+            console.error("Error reconnecting: ",err);
+            setTimeout(handleDisconnect,2000);
+        }
+        else
+        console.log("Reconnected");
+    });
+}
+const __dirname=dirname(fileURLToPath(import.meta.url));
+const port=3000;
+const saltRounds=10;
+const app=express();
+var books=[];
+var response="";
+var name="";
+var cs_all_books=[];
+var me_all_books=[];
+var ee_all_books=[];
+var ce_all_books=[];
+var ch_all_books=[];
+
+app.use(express.static('public'));
+app.use(bodyParser.urlencoded({extended: true}));
+try
+{
+    db.query("SELECT title from `TABLE 1`",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        if(result.length>0)
+        {
+            for(var i=0;i<result.length;i++)
+            {
+                books.push(result[i].title);
             }
-
-
-            .logo{
-
-               border: 3px;
-                width: 300px;
-                height: 250px;
-                margin-left: 300px;
-                margin-right: 300px;
-                margin-top: 50px;
+        }
+    });
+}
+catch(err)
+{
+    console.error("Error: ",err);
+}
+app.get("/",(req,res)=>{
+    res.render(__dirname+"/views/open.ejs",{
+        books: books,
+    });
+});
+app.get("/login",(req,res)=>{
+    res.render(__dirname+"/views/login.ejs",{
+        response: response,
+    });
+})
+app.get("/signup",(req,res)=>{
+    res.render("signup.ejs");
+})
+app.post("/login",async (req,res) =>{
+    const username=req.body.Username;
+    const password=req.body.Password;
+    try
+    {
+        db.query("SELECT * FROM users WHERE email=?",[username],function(err,result){
+            if(err)
+            console.error("Error: ",err);
+            if(result.length>0)
+            {
+                const pass=result[0].password;
+                name=result[0].fName;
+                bcrypt.compare(password,pass,(err,result)=>{
+                    if(err)
+                    console.error("Error: ",err);
+                    else
+                    {
+                        if(result)
+                        {
+                            response="Login Successful";
+                            res.redirect("/user_open");
+                        }
+                        else
+                        {
+                            response="Invalid Credentials. Try Again.";
+                            res.redirect("/login");
+                        }
+                    }
+                });
             }
-
-           
-            .login-box{
-               
-                display: inline-block;
-               /* padding-left: 100px;*/
-                border: 2px solid black;
-                padding-bottom: 6px;
-                margin-left:200px ;
-                border-radius: 2px;
-                text-align: center;
-                background-color:rgb(255, 255, 255, 0.2) ;
-                
-                
+            else
+            {
+                response="User does not exist.";
+                res.redirect("/login");
             }
-
-           input{
-            margin-bottom: 10px;
-            margin-left:350px ;
-            margin-right: 250px;
-            height: 30px;
-            border-radius: 30px;
-            background-color: rgb(255, 255, 255, 0.6);
-            display: block;
-           }
-            
-           .login-button{
-            margin-left: 400px;
-            margin-right: 200px;
-            margin-top: 15px;
-            margin-bottom: 15px;
-            display: block;
-            height: 50px;
-            width: 100px;
-            border-radius: 50px;
-            background-color: rgb(127, 31, 168);
-            color: white;
-           }
-
-           .F_Pass{
-            margin-left: 620px;
-            margin-bottom: 20px;
-           }
-        </style>
-    </head>
-    <body>
-       
-
-
-
-        <div class="login-box">
-
-            <img class="logo" src = "assets/oie_transparent1.png">
-            <h2 class="WELCOME">WELCOME</h2>
-            <input class="userName" type="text" placeholder="Username">  
-            <input class="passWord" type="password" placeholder="password" >  
-            <button class="login-button">Login</button>         
-
-            <a href="https://www.youtube.com" class="F_Pass">forgot password?</a>
-        </div>
-       
-       
-
-    </body>
-</html>
+        });
+    }
+    catch(err){
+        console.error("Error: ",err.message);
+        res.redirect("/");
+    }
+});
+app.post("/signup",async (req,res)=>{
+    const fName=req.body.fname;
+    const lName=req.body.lname;
+    const username=req.body.mail;
+    const password=req.body.pswd;
+    try
+    {
+        db.query("SELECT * FROM users WHERE email=?",[username], function(err,result){
+            if(err)
+            console.log("Error: ",err);
+            if(result.length>0)
+            {
+                res.render(__dirname+"/views/signup.ejs",{
+                    alert: "User already exist. Try logging in.",
+                });
+            }
+            else
+            {
+                bcrypt.hash(password,saltRounds,async (err,hash)=>{
+                    if(err)
+                    console.error("Error: ",err.message);
+                    else
+                    {
+                        try
+                        {
+                            db.execute("INSERT INTO users(fName,lName,email,password) VALUES (?,?,?,?)",[fName,lName,username,hash]);
+                            res.redirect("/user_open")
+                        }
+                        catch(err)
+                        {
+                            console.error("Error: ",err);
+                        }
+                    }
+                });
+            }
+        });
+    }
+    catch(err)
+    {
+        console.error("Error: ",err);
+    }
+});
+app.get("/search",(req,res)=>{
+    res.render(__dirname+"/views/search.ejs",{
+        books: books,
+    });
+});
+app.get("/user_open",(req,res)=>{
+    res.render(__dirname+"/views/user_open.ejs",{
+        Name: name,
+        books: books
+    });
+});
+app.get("/cs",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Computer Science'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                cs_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/cs.ejs",{
+        cs_all: cs_all_books,
+        Name: name,
+    });
+    cs_all_books=[];
+});
+app.get("/me",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Mechanical Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                me_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/me.ejs",{
+        me_all: me_all_books,
+        Name: name,
+    });
+    me_all_books=[];
+});
+app.get("/ee",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Electrical Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                ee_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/ee.ejs",{
+        ee_all: ee_all_books,
+        Name: name,
+    });
+    ee_all_books=[];
+});
+app.get("/ce",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Civil Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                ce_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/ce.ejs",{
+        ce_all: ce_all_books,
+        Name: name,
+    });
+    ce_all_books=[];
+});
+app.get("/ch",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Chemical Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                ch_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/ch.ejs",{
+        ch_all: ch_all_books,
+        Name: name,
+    });
+    ch_all_books=[];
+});
+app.get("/terms_and_conditions",(req,res)=>{
+    res.render(__dirname+"/views/terms_and_conditions.ejs");
+});
+app.get("/privacy_policy",(req,res)=>{
+    res.render(__dirname+"/views/privacy_policy.ejs");
+});
+app.listen(port,()=>{
+    console.log(`Server is running on port ${port}.`)
+});
