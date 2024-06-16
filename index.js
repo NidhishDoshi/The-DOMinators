@@ -78,7 +78,7 @@ app.post("/login",async (req,res) =>{
     const password=req.body.Password;
     try
     {
-        db.query("SELECT password FROM users WHERE username=?",[username],function(err,result){
+        db.query("SELECT password FROM users WHERE email=?",[username],function(err,result){
             if(err)
             console.error("Error: ",err);
             if(result.length>0)
