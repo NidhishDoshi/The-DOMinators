@@ -40,6 +40,11 @@ const app=express();
 var books=[];
 var response="";
 var name="";
+var cs_all_books=[];
+var me_all_books=[];
+var ee_all_books=[];
+var ce_all_books=[];
+var ch_all_books=[];
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({extended: true}));
@@ -166,7 +171,124 @@ app.get("/search",(req,res)=>{
 app.get("/user_open",(req,res)=>{
     res.render(__dirname+"/views/user_open.ejs",{
         Name: name,
+        books: books
     });
+});
+app.get("/cs",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Computer Science'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                cs_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/cs.ejs",{
+        cs_all: cs_all_books,
+        Name: name,
+    });
+    cs_all_books=[];
+});
+app.get("/me",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Mechanical Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                me_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/me.ejs",{
+        me_all: me_all_books,
+        Name: name,
+    });
+    me_all_books=[];
+});
+app.get("/ee",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Electrical Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                ee_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/ee.ejs",{
+        ee_all: ee_all_books,
+        Name: name,
+    });
+    ee_all_books=[];
+});
+app.get("/ce",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Civil Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                ce_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/ce.ejs",{
+        ce_all: ce_all_books,
+        Name: name,
+    });
+    ce_all_books=[];
+});
+app.get("/ch",(req,res)=>{
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Chemical Engineering'",function (err,result){
+        if(err)
+        console.error("Error: ",err);
+        else
+        {
+            for(var i=0;i<result.length;i++)
+                ch_all_books.push(result[i]);
+        }
+    });
+    res.render(__dirname+"/views/ch.ejs",{
+        ch_all: ch_all_books,
+        Name: name,
+    });
+    ch_all_books=[];
+});
+app.get("/news_archive",(req,res)=>{
+    res.render(__dirname+"/views/news.ejs",{
+        Name: name,
+    });
+});
+app.post("/page",(req,res)=>{
+    const book_name=req.body.book_name;
+    try
+    {
+        db.query("SELECT * FROM `TABLE 1` WHERE title=?",[book_name],function(err,result){
+            if(err){
+                console.error("Error: ",err);
+            }
+            else{
+                if(result.length>0){
+                const details=result[0];
+                res.render(__dirname+"/views/page.ejs",{
+                    title: details.title,
+                    author: details.author,
+                    description: details.description,
+                    genre: details.genre,
+                    department: details.department,
+                    count: details.count,
+                    vendor: details.vendor,
+                    publisher: details.publisher,
+            });}
+            else{
+                console.log("Book does not exist");
+            }
+        }
+        });
+    }
+    catch(err){
+        console.error("Error: ",err);
+    }
 });
 app.get("/terms_and_conditions",(req,res)=>{
     res.render(__dirname+"/views/terms_and_conditions.ejs");
@@ -174,6 +296,9 @@ app.get("/terms_and_conditions",(req,res)=>{
 app.get("/privacy_policy",(req,res)=>{
     res.render(__dirname+"/views/privacy_policy.ejs");
 });
+app.get("/contact",(req,res)=>{
+    res.render(__dirname+"/views/contact.ejs");
+})
 app.listen(port,()=>{
     console.log(`Server is running on port ${port}.`)
 });
