@@ -4,7 +4,6 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
-import { name } from "ejs";
 
 const app = express();
 const port = 3000;
@@ -51,6 +50,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let books = [];
+var name="";
 let cs_all_books = [];
 let me_all_books = [];
 let ee_all_books = [];
@@ -99,7 +99,7 @@ app.post("/login", async (req, res) => {
             } else {
                 if (result.length > 0) {
                     const pass = result[0].password;
-                    const name = result[0].fName;
+                    name = result[0].fName;
                     bcrypt.compare(password, pass, (err, result) => {
                         if (err) {
                             console.error("Error: ", err);
@@ -150,6 +150,7 @@ app.post("/signup", async (req, res) => {
                         } else {
                             try {
                                 db.execute("INSERT INTO users(fName, lName, email, password) VALUES (?, ?, ?, ?)", [fName, lName, username, hash]);
+                                name = fName;
                                 res.render(__dirname + "/views/user_open.ejs", {
                                     Name: fName,
                                     books: books,
