@@ -330,6 +330,11 @@ app.post("/page",(req,res)=>{
       console.error("Error: ",err);
   }
 });
+app.get("/news_archive",(req,res)=>{
+    res.render(__dirname+"/views/news.ejs",{
+        Name: name,
+    });
+});
 app.get("/terms_and_conditions",(req,res)=>{
   res.render(__dirname+"/views/terms_and_conditions.ejs");
 });
