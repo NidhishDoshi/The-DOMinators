@@ -13,18 +13,22 @@
             <a href="https://iitdh.ac.in" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
               <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo" height="50px">
             </a>
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-              <input type="text" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" list="books">
-              <datalist id="books">
-                  <% if(locals.me_all) { %>
-                  <% for(var i=0;i<me_all.length;i++) { %>
-                  <option><%= me_all[i].title %></option>
-                  <% } } %>
-              </datalist>
-            </form>
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search" action="/page" method="post">
+                <input type="text" class="form-control form-control-dark mx-2" placeholder="Search..." aria-label="Search" list="books" class="form-control" name="book_name">
+                <datalist id="books">
+                  <% if(me_all) { %>
+                    <% me_all.forEach(book => { %>
+                        <option><%= book.title %></option>
+                    <% }) %>
+                    <% } %>
+                </datalist>
+                <button type="submit" class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg></button>
+              </form>
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
               <li>
-                <a href="#" class="nav-link text-secondary">
+                <a href="/user_open" class="nav-link text-secondary">
                     <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="25" height="24" fill="currentColor" class="bi bi-tools" viewBox="0 0 16 16">
                         <path d="M1 0 0 1l2.2 3.081a1 1 0 0 0 .815.419h.07a1 1 0 0 1 .708.293l2.675 2.675-2.617 2.654A3.003 3.003 0 0 0 0 13a3 3 0 1 0 5.878-.851l2.654-2.617.968.968-.305.914a1 1 0 0 0 .242 1.023l3.27 3.27a.997.997 0 0 0 1.414 0l1.586-1.586a.997.997 0 0 0 0-1.414l-3.27-3.27a1 1 0 0 0-1.023-.242L10.5 9.5l-.96-.96 2.68-2.643A3.005 3.005 0 0 0 16 3q0-.405-.102-.777l-2.14 2.141L12 4l-.364-1.757L13.777.102a3 3 0 0 0-3.675 3.68L7.462 6.46 4.793 3.793a1 1 0 0 1-.293-.707v-.071a1 1 0 0 0-.419-.814zm9.646 10.646a.5.5 0 0 1 .708 0l2.914 2.915a.5.5 0 0 1-.707.707l-2.915-2.914a.5.5 0 0 1 0-.708M3 11l.471.242.529.026.287.445.445.287.026.529L5 13l-.242.471-.026.529-.445.287-.287.445-.529.026L3 15l-.471-.242L2 14.732l-.287-.445L1.268 14l-.026-.529L1 13l.242-.471.026-.529.445-.287.287-.445.529-.026z"/>
                       </svg>
@@ -69,11 +73,20 @@
           </div>
         </div>
       </div>
-    <% if(locals.me_all){ %>
-        <% for(var i=0;i<me_all.length;i++){ %>
-            <%= me_all[i].title %> by <%= me_all[i].author %>
+      <% if(me_all){ %>
+        <% me_all.forEach(book => { %>
+            <div class="container mb-2 text-bg-light">
+                <form action="/page" method="post">
+                    <button type="submit" style="width: 100%; background-color: white; border: 0; cursor: pointer; text-align: left;">
+                        <%= book.title %> by <%= book.author %>
+                    </button>
+                    <input type="hidden" name="book_name" value="<%= book.title %>">
+                </form>
+            </div>
             <br/>
-        <% } } %>
+        <% }) %>
+    <% } %>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>
