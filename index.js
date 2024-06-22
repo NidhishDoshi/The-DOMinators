@@ -4,16 +4,17 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
+//import { name } from "ejs";
 
 const app = express();
 const port = 3000;
 const saltRounds = 10;
 
 const db = mysql.createConnection({
-    host: "sql7.freesqldatabase.com",
-    user: "sql7714106",
-    database: "sql7714106",
-    password: "jFBhbcliJV",
+    host: "sql12.freesqldatabase.com",
+    user: "sql12715405",
+    database: "sql12715405",
+    password: "yGUFn6HaP8",
     port: 3306,
 });
 
@@ -92,6 +93,7 @@ app.get("/signup", (req, res) => {
 app.post("/login", async (req, res) => {
     const username = req.body.Username;
     const password = req.body.Password;
+    if(username!='Admin@iitdh.ac.in'){
     try {
         db.query("SELECT * FROM users WHERE email=?", [username], function (err, result) {
             if (err) {
@@ -126,6 +128,36 @@ app.post("/login", async (req, res) => {
     } catch (err) {
         console.error("Error: ", err.message);
         res.redirect("/");
+    }}
+    else{
+        try{
+            db.query("SELECT * FROM users WHERE email='Admin@iitdh.ac.in'",function(err,result){
+                if(err)
+                console.error("Error: ",err);
+                else{
+                    const pass=result[0].password;
+                    name = result[0].fName;
+                    bcrypt.compare(password, pass, (err, result) => {
+                        if (err) {
+                            console.error("Error: ", err);
+                        } else {
+                            if (result) {
+                                res.render(__dirname + "/views/admin_open.ejs", {
+                                    Name: name,
+                                    books: books,
+                                });
+                            } else {
+                                res.render(__dirname + "/views/login.ejs", {
+                                    response: "Invalid Credentials. Try Again.",
+                                });
+                            }
+                        }
+                    });
+                }
+            });
+        }
+        catch(err){
+        console.error("Error: ",err);}
     }
 });
 
@@ -134,6 +166,7 @@ app.post("/signup", async (req, res) => {
     const lName = req.body.lname;
     const username = req.body.mail;
     const password = req.body.pswd;
+    const Branch = req.body.branch_name;
     try {
         db.query("SELECT * FROM users WHERE email=?", [username], function (err, result) {
             if (err) {
@@ -149,7 +182,7 @@ app.post("/signup", async (req, res) => {
                             console.error("Error: ", err.message);
                         } else {
                             try {
-                                db.execute("INSERT INTO users(fName, lName, email, password) VALUES (?, ?, ?, ?)", [fName, lName, username, hash]);
+                                db.execute("INSERT INTO users(fName, lName, email, password, Branch) VALUES (?, ?, ?, ?, ?)", [fName, lName, username, hash, Branch]);
                                 name = fName;
                                 res.render(__dirname + "/views/user_open.ejs", {
                                     Name: fName,
