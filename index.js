@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
+import e from "express";
 //import { name } from "ejs";
 
 const app = express();
@@ -52,11 +53,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 let books = [];
 var name="";
+var email="";
 let cs_all_books = [];
 let me_all_books = [];
 let ee_all_books = [];
 let ce_all_books = [];
 let ch_all_books = [];
+let ep_all_books = [];
 
 try {
     db.query("SELECT title FROM `TABLE 1`", function (err, result) {
@@ -102,6 +105,7 @@ app.post("/login", async (req, res) => {
                 if (result.length > 0) {
                     const pass = result[0].password;
                     name = result[0].fName;
+                    email = result[0].email;
                     bcrypt.compare(password, pass, (err, result) => {
                         if (err) {
                             console.error("Error: ", err);
@@ -109,6 +113,7 @@ app.post("/login", async (req, res) => {
                             if (result) {
                                 res.render(__dirname + "/views/user_open.ejs", {
                                     Name: name,
+                                    email: email,
                                     books: books,
                                 });
                             } else {
@@ -184,8 +189,10 @@ app.post("/signup", async (req, res) => {
                             try {
                                 db.execute("INSERT INTO users(fName, lName, email, password, Branch) VALUES (?, ?, ?, ?, ?)", [fName, lName, username, hash, Branch]);
                                 name = fName;
+                                email = username;
                                 res.render(__dirname + "/views/user_open.ejs", {
                                     Name: fName,
+                                    email: email,
                                     books: books,
                                 });
                             } catch (err) {
@@ -209,7 +216,8 @@ app.get("/search", (req, res) => {
 
 app.get("/user_open", (req, res) => {
     res.render(__dirname + "/views/user_open.ejs", {
-        Name: name, 
+        Name: name,
+        email: email,
         books: books,
     });
 });
@@ -225,6 +233,7 @@ app.get("/cs", (req, res) => {
             res.render(__dirname + "/views/cs.ejs", {
                 cs_all: cs_all_books,
                 Name: name, 
+                email: email,
             });
             cs_all_books = []; 
         }
@@ -241,7 +250,8 @@ app.get("/me", (req, res) => {
             }
             res.render(__dirname + "/views/me.ejs", {
                 me_all: me_all_books,
-                Name: name, 
+                Name: name,
+                email: email, 
             });
             me_all_books = []; 
         }
@@ -258,7 +268,8 @@ app.get("/ee", (req, res) => {
             }
             res.render(__dirname + "/views/ee.ejs", {
                 ee_all: ee_all_books,
-                Name: name, 
+                Name: name,
+                email: email, 
             });
             ee_all_books = []; 
         }
@@ -276,6 +287,7 @@ app.get("/ce", (req, res) => {
             res.render(__dirname + "/views/ce.ejs", {
                 ce_all: ce_all_books,
                 Name: name, 
+                email: email,
             });
             ce_all_books = []; 
         }
@@ -292,9 +304,28 @@ app.get("/ch", (req, res) => {
             }
             res.render(__dirname + "/views/ch.ejs", {
                 ch_all: ch_all_books,
-                Name: name, 
+                Name: name,
+                email: email, 
             });
             ch_all_books = []; 
+        }
+    });
+});
+
+app.get("/ep", (req, res) => {
+    db.query("SELECT * FROM `TABLE 1` WHERE department='Engineering Physics'", function (err, result) {
+        if (err) {
+            console.error("Error: ", err);
+        } else {
+            for (let i = 0; i < result.length; i++) {
+                ep_all_books.push(result[i]);
+            }
+            res.render(__dirname + "/views/ep.ejs", {
+                ep_all: ep_all_books,
+                Name: name, 
+                email: email,
+            });
+            ep_all_books = []; 
         }
     });
 });
@@ -330,11 +361,39 @@ app.post("/page",(req,res)=>{
       console.error("Error: ",err);
   }
 });
+
 app.get("/news_archive",(req,res)=>{
     res.render(__dirname+"/views/news.ejs",{
         Name: name,
+        email: email,
+    });
+})
+
+app.get("/suggest_new",(req,res)=>{
+    res.render(__dirname+"/views/suggest_new_books.ejs",{
+        Name: name,
+        email: email,
     });
 });
+
+app.post("/suggested",(req,res)=>{
+    const name = req.body.Name;
+    const email = req.body.Email;
+    const title = req.body.title;
+    const author = req.body.author;
+    const vendor = req.body.vendor;
+    const publisher = req.body.publisher;
+    const department = req.body.department;
+    try{
+        db.execute("INSERT INTO suggestion(name, email, title, author, vendor, publisher, department) VALUES (?,?,?,?,?,?,?)",[name,email,title,author,vendor,publisher,department]);
+        res.redirect("/user_open");
+    }
+    catch(err)
+    {
+        console.error("Error: ",err);
+    }
+});
+
 app.get("/terms_and_conditions",(req,res)=>{
   res.render(__dirname+"/views/terms_and_conditions.ejs");
 });
