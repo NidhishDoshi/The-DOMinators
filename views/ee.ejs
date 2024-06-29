@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Electrical Engineering</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: Arial, sans-serif; 
+            background-color: #f8f9fa; 
+            margin: 0;
+            padding: 0;
+        }
+
+        .book-shelf-container {
+            /*background-image: url("../views/images.jpeg");*/
+            background-size: cover;
+            padding: 50px 0;
+        }
+
+        .book-shelf {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .book-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 200px;
+            height: 350px; 
+            margin: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-image: linear-gradient(135deg, #c4e0e5 0%, #4ca1af 100%);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .book-card img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px; 
+        }
+
+        .book-card .card-body {
+            height: 100px; 
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto; 
+        }
+
+        .book-title {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin: 10px 0 5px; 
+        }
+
+        .book-author {
+            font-size: 0.9rem;
+            color: #555;
+            text-align: center;
+            margin: 0;
+        }
+
+        .shelf-divider {
+            width: 100%;
+            height: 10px;
+            background-color: #8b5a2b;
+            margin: 0 0 20px 0;
+            border-radius: 5px;
+        }
+
+        .text-bg-dark {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .text-bg-dark a {
+            color: #fff;
+        }
+
+        .text-bg-dark a:hover {
+            color: #f8f9fa;
+            text-decoration: none;
+        }
+
+        .text-bg-dark .nav-link {
+            color: #fff;
+        }
+
+        .text-bg-dark .nav-link:hover {
+            color: #f8f9fa;
+            text-decoration: none;
+        }
+    </style>
+    
+</head>
+<body>
+    <div class="px-3 py-2 text-bg-dark border-bottom">
+        <div>
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="https://iitdh.ac.in" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                    <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo" height="50px">
+                </a>
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search" action="/page" method="post">
+                    <input type="text" class="form-control form-control-dark mx-2" placeholder="Search..." aria-label="Search" list="books" class="form-control" name="book_name">
+                    <datalist id="books">
+                        <% if(ee_all) { %>
+                        <% ee_all.forEach(book => { %>
+                            <option><%= book.title %></option>
+                        <% }) %>
+                        <% } %>
+                    </datalist>
+                    <button type="submit" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                    </button>
+                </form>
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                    <li>
+                        <a href="/user_open" class="nav-link text-secondary">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-cpu" viewBox="0 0 16 16">
+                                <path d="M5 0a.5.5 0 0 1 .5.5V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2h1V.5a.5.5 0 0 1 1 0V2A2.5 2.5 0 0 1 14 4.5h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14v1h1.5a.5.5 0 0 1 0 1H14a2.5 2.5 0 0 1-2.5 2.5v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14h-1v1.5a.5.5 0 0 1-1 0V14A2.5 2.5 0 0 1 2 11.5H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2v-1H.5a.5.5 0 0 1 0-1H2A2.5 2.5 0 0 1 4.5 2V.5A.5.5 0 0 1 5 0m-.5 3A1.5 1.5 0 0 0 3 4.5v7A1.5 1.5 0 0 0 4.5 13h7a1.5 1.5 0 0 0 1.5-1.5v-7A1.5 1.5 0 0 0 11.5 3zM5 6.5A1.5 1.5 0 0 1 6.5 5h3A1.5 1.5 0 0 1 11 6.5v3A1.5 1.5 0 0 1 9.5 11h-3A1.5 1.5 0 0 1 5 9.5zM6.5 6a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5z"/>
+                              </svg>
+                            EE: Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-speedometer2" viewBox="0 0 16 16">
+                                <path d="M8 4a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V4.5A.5.5 0 0 1 8 4M3.732 5.732a.5.5 0 0 1 .707 0l.915.914a.5.5 0 1 1-.708.708l-.914-.915a.5.5 0 0 1 0-.707M2 10a.5.5 0 0 1 .5-.5h1.586a.5.5 0 0 1 0 1H2.5A.5.5 0 0 1 2 10m9.5 0a.5.5 0 0 1 .5-.5h1.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5m.754-4.246a.39.39 0 0 0-.527-.02L7.547 9.31a.91.91 0 1 0 1.302 1.258l3.434-4.297a.39.39 0 0 0-.029-.518z"/>
+                                <path fill-rule="evenodd" d="M0 10a8 8 0 1 1 15.547 2.661c-.442 1.253-1.845 1.602-2.932 1.25C11.309 13.488 9.475 13 8 13c-1.474 0-3.31.488-4.615.911-1.087.352-2.49.003-2.932-1.25A8 8 0 0 1 0 10m8-7a7 7 0 0 0-6.603 9.329c.203.575.923.876 1.68.63C4.397 12.533 6.358 12 8 12s3.604.532 4.923.96c.757.245 1.477-.056 1.68-.631A7 7 0 0 0 8 3"/>
+                            </svg>
+                            Dashboard
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16">
+                                <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2zm15 10V9H1v3h14zm0 1H1v2a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2zm0-5V5H1v3h14zm0-4V2a1 1 0 0 0-1-1H2a1 1 0 0 0-1 1v2h14z"/>
+                            </svg>
+                            Orders
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-grid" viewBox="0 0 16 16">
+                                <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H2zm0 1h12a1 1 0 0 1 1 1v2H1V4a1 1 0 0 1 1-1zm1 4h10v4H3V7zm-1 5h12a1 1 0 0 0 1-1v-2H1v2a1 1 0 0 0 1 1z"/>
+                            </svg>
+                            Products
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                            </svg>
+                            <%= Name %>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container mt-4 book-shelf-container">
+        <div class="book-shelf">
+            <% if(ee_all) { %>
+                <% ee_all.forEach((book, index) => { %>
+                    <% if (index > 0 && index % 4 === 0) { %>
+                        <div class="shelf-divider"></div>
+                    <% } %>
+                    <div class="card book-card" onclick="document.getElementById('book-form-<%= book.title %>').submit();">
+                        <% var link = book.photo_link %>
+                        <img class="card-img-top" src="<%= link %>" alt="Book Cover">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title book-title"><%= book.title %></h5>
+                            <p class="card-text book-author">by <%= book.author %></p>
+                        </div>
+                        <form id="book-form-<%= book.title %>" action="/page" method="post" style="display: none;">
+                            <input type="hidden" name="book_name" value="<%= book.title %>">
+                        </form>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
+    <div class="container mb-4" style="display: flex; justify-content: center;">
+        <a href="/suggest_new" style="text-decoration: none;">Suggest new books</a>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+</html>
