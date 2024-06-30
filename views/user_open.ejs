@@ -61,14 +61,19 @@
             <a href="https://iitdh.ac.in" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
               <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo" height="50px">
             </a>
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-              <input type="text" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" list="books">
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search" action="/page" method="post">
+              <input type="text" class="form-control form-control-dark mx-2" placeholder="Search..." aria-label="Search" list="books" name="book_name">
               <datalist id="books">
                   <% if(locals.books) { %>
                   <% for(var i=0;i<books.length;i++) { %>
                   <option><%= books[i] %></option>
                   <% } } %>
               </datalist>
+              <button type="submit" class="btn btn-outline-success">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                </svg>
+            </button>
             </form>
             <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
               <li>
@@ -103,7 +108,7 @@
                 </a>
               </li>
               <li>
-                <a href="#" class="nav-link text-white">
+                <a href="/profile" class="nav-link text-white">
                     <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>

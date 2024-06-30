@@ -2,7 +2,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
-import { dirname } from "path";
+import { dirname, resolve } from "path";
 import mysql from "mysql2";
 import bcrypt from "bcrypt";
 import ExcelJS from "exceljs";
@@ -625,6 +625,60 @@ app.post("/return",(req,res)=>{
         console.error("Error: ",err)
     }
 })
+
+app.get("/profile",async (req,res)=>{
+    const email1=email.slice(0,email.indexOf('@'));
+    const sql=`SELECT * FROM ${email1}`;
+    const result = await new Promise((resolve,reject)=>{
+        db.query(sql,(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result1 = await new Promise((resolve,reject)=>{
+        db.query("SELECT * FROM users WHERE fName = ?",[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    if(result.length>0){
+        var details=[];
+        for(var i=0;i<result.length;i++){
+            const title = result[i].title;
+            const photo_link = await new Promise((resolve,reject)=>{
+                db.query("SELECT photo_link FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
+                    if(err){
+                        return reject(err);
+                    }
+                    resolve(result);
+                });
+            });
+            details.push(photo_link[0].photo_link);
+        }
+        res.render(__dirname+"/views/profile.ejs",{
+            FName: result1[0].fName,
+            Name: name,
+            LName: result1[0].lName,
+            email: email,
+            branch: result1[0].Branch,
+            history: result,
+            photos: details
+        });
+    }
+    else{
+        res.render(__dirname+"/views/profile.ejs",{
+            FName: result1[0].fName,
+            Name: name,
+            LName: result1[0].lName,
+            email: email,
+            branch: result1[0].Branch
+        });
+    }
+});
 
 //Render terms_and_conditions.ejs file
 app.get("/terms_and_conditions",(req,res)=>{
