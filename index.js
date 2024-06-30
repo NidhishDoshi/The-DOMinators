@@ -14,9 +14,9 @@ const saltRounds = 10;
 //Establish connection to MySQL database
 const db = mysql.createConnection({
     host: "sql12.freesqldatabase.com",
-    user: "sql12715405",
-    database: "sql12715405",
-    password: "yGUFn6HaP8",
+    user: "sql12716910",
+    database: "sql12716910",
+    password: "1XLPQnaY8B",
     port: 3306,
 });
 
@@ -182,6 +182,12 @@ app.post("/signup", async (req, res) => {
     const username = req.body.mail;
     const password = req.body.pswd;
     const Branch = req.body.branch_name;
+    const check = username.slice(username.indexOf('@')+1);
+    if(check!=='iitdh.ac.in'){
+        console.log("Access denied");
+        res.redirect("/");
+    }
+    else{
     try {
         db.query("SELECT * FROM users WHERE email=?", [username], function (err, result) {
             if (err) {
@@ -201,7 +207,7 @@ app.post("/signup", async (req, res) => {
                                 name = fName;
                                 email = username;
                                 const email1=email.slice(0,email.indexOf('@'));
-                                const sql=`CREATE TABLE ${email1} (id SERIAL NOT NULL, title TEXT, author TEXT, genre TEXT, department TEXT, vendor TEXT, publisher TEXT, borrowed_date DATETIME, returned_date DATETIME)`;
+                                const sql=`CREATE TABLE ${email1} (id SERIAL NOT NULL, title TEXT, author TEXT, genre TEXT, department TEXT, vendor TEXT, publisher TEXT, borrowed_date DATETIME, returned_date DATETIME, queue_pos INT)`;
                                 db.execute(sql);
                                 res.render(__dirname + "/views/user_open.ejs", {
                                     Name: fName,
@@ -218,7 +224,7 @@ app.post("/signup", async (req, res) => {
         });
     } catch (err) {
         console.error("Error: ", err);
-    }
+    }}
 });
 
 //Render search.ejs file
@@ -376,7 +382,8 @@ app.post("/page",(req,res)=>{
                   vendor_id: details.vendor_id,
                   publisher: details.publisher,
                   publisher_id: details.publisher_id,
-                  photo_link: details.photo_link
+                  photo_link: details.photo_link,
+                  queue: details.queue
           });}
           else{
               console.log("Book does not exist");
@@ -433,6 +440,43 @@ app.post("/page1",(req,res)=>{
             console.err("Error: ",err);
         }
     }
+    else{
+        try{
+            db.query("UPDATE `TABLE 1` SET queue = queue+1 WHERE title=?",[title],function(err,result){
+                if(err)
+                console.error("Error: ",err);
+                else{
+                    try{
+                        db.query("SELECT * FROM `TABLE 1` WHERE title=?",[title],function(err,result){
+                            if(err)
+                            console.error("Error: ",err);
+                            if(result.length>0){
+                            const details = result[0];
+                            const email1=email.slice(0,email.indexOf('@'));
+                            const date=new Date();
+                            const sql = `INSERT INTO ${email1} (title, author, genre, department, vendor, publisher, queue_pos) VALUES(?, ?, ?, ?, ?, ?, ?)`
+                            db.execute(sql,[details.title,details.author,details.genre,details.department,details.vendor,details.publisher,details.queue]);
+                            res.render(__dirname+"/views/inqueue.ejs",{
+                                Name: name,
+                                email: email,
+                                title: title,
+                                queue_pos: details.queue
+                            });
+                        }
+                    });
+                   
+                }
+                catch(err)
+                {
+                    console.error("Error: ",err);
+                }
+            }
+        });
+        }
+        catch(err){
+            console.error("Error: ",err);
+        }
+    }
 });
 
 
@@ -470,6 +514,117 @@ app.post("/suggested",(req,res)=>{
         console.error("Error: ",err);
     }
 });
+
+app.get("/order", async (req, res) => {
+    var ans = [];
+    const email1 = email.slice(0, email.indexOf("@"));
+
+    try {
+        const sql1 = `SELECT title, borrowed_date FROM ${email1} WHERE (returned_date IS NULL AND (queue_pos IS NULL OR queue_pos = 0))`;
+        const result1 = await new Promise((resolve, reject) => {
+            db.query(sql1, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+
+        for (let i = 0; i < result1.length; i++) {
+            const title_now = result1[i].title;
+            const borrow_now = result1[i].borrowed_date;
+            var ans1 = [];
+
+            const result2 = await new Promise((resolve, reject) => {
+                db.query("SELECT * FROM `TABLE 1` WHERE title = ?", [title_now], (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(results);
+                });
+            });
+
+            if (result2.length > 0) {
+                ans1.push(result2[0].title);
+                ans1.push(result2[0].photo_link);
+                ans1.push(result2[0].author);
+                ans1.push(result2[0].department);
+                ans1.push(result2[0].genre);
+                ans1.push(result2[0].vendor);
+                ans1.push(result2[0].publisher);
+                ans1.push(borrow_now);
+                ans1.push(0);
+            }
+            ans.push(ans1);
+        }
+
+        const sql2 = `SELECT title, queue_pos FROM ${email1} WHERE borrowed_date IS NULL`;
+        const result3 = await new Promise((resolve, reject) => {
+            db.query(sql2, (err, result) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+
+        for (let i = 0; i < result3.length; i++) {
+            const title_now = result3[i].title;
+            const queue_pos = result3[i].queue_pos;
+            var ans1 = [];
+
+            const result4 = await new Promise((resolve, reject) => {
+                db.query("SELECT * FROM `TABLE 1` WHERE title = ?", [title_now], (err, results) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    resolve(results);
+                });
+            });
+
+            if (result4.length > 0) {
+                ans1.push(result4[0].title);
+                ans1.push(result4[0].photo_link);
+                ans1.push(result4[0].author);
+                ans1.push(result4[0].department);
+                ans1.push(result4[0].genre);
+                ans1.push(result4[0].vendor);
+                ans1.push(result4[0].publisher);
+                ans1.push(0);
+                ans1.push(queue_pos);
+            }
+            ans.push(ans1);
+        }
+        res.render(__dirname + "/views/order.ejs", {
+            Name: name,
+            orders: ans,
+            email: email
+        });
+    } catch (err) {
+        console.error("Error: ", err);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+app.post("/return",(req,res)=>{
+    const title=req.body.title;
+    const email1=email.slice(0,email.indexOf('@'));
+    const date=new Date();
+    try{
+        const sql1 = `UPDATE ${email1} SET returned_date = ? WHERE title = ?`
+        db.execute(sql1,[date,title]);
+        db.query("UPDATE `TABLE 1` SET count = count+1 WHERE title=?",[title],function(err,result){
+            if(err)
+            console.error("Error: ",err);
+            else{
+                res.redirect("/order");
+            }
+        });
+    }
+    catch(err){
+        console.error("Error: ",err)
+    }
+})
 
 //Render terms_and_conditions.ejs file
 app.get("/terms_and_conditions",(req,res)=>{
