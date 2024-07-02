@@ -185,7 +185,7 @@
         <div class="book-shelf">
             <% if(cs_all) { %>
                 <% cs_all.forEach((book, index) => { %>
-                    <% if (index > 0 && index % 4 === 0) { %>
+                    <% if (index > 0 && index % 3 === 0) { %>
                         <div class="shelf-divider"></div>
                     <% } %>
                     <div class="card book-card" onclick="document.getElementById('book-form-<%= book.title %>').submit();">

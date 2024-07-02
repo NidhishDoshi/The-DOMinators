@@ -52,6 +52,79 @@
       c{
         color: #000;
       }
+      .book-shelf-container {
+            /*background-image: url("../views/images.jpeg");*/
+            background-size: cover;
+            padding: 50px 0;
+        }
+
+        .book-shelf {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .book-card {
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 200px;
+            height: 350px; 
+            margin: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-image: linear-gradient(135deg, #c4e0e5 0%, #4ca1af 100%);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .book-card:hover {
+            transform: scale(1.05);
+        }
+
+        .book-card img {
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            object-fit: contain;
+            border-bottom: 1px solid #ccc;
+            margin-bottom: 10px; 
+        }
+
+        .book-card .card-body {
+            height: 100px; 
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto; 
+        }
+
+        .book-title {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+            color: #333;
+            margin: 10px 0 5px; 
+        }
+
+        .book-author {
+            font-size: 0.9rem;
+            color: #555;
+            text-align: center;
+            margin: 0;
+        }
+
+        .shelf-divider {
+            width: 100%;
+            height: 10px;
+            background-color: #8b5a2b;
+            margin: 0 0 20px 0;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -264,6 +337,29 @@
           </div>
         </div>	</div>
       </section>
+      <h1>Recommended Books</h1>
+      <div class="container mt-4 book-shelf-container">
+        <div class="book-shelf">
+            <% if(recommendations) { %>
+                <% recommendations.forEach((book, index) => { %>
+                    <% if (index > 0 && index % 3 === 0) { %>
+                        <div class="shelf-divider"></div>
+                    <% } %>
+                    <div class="card book-card" onclick="document.getElementById('book-form-<%= book.title %>').submit();">
+                        <% var link = book.photo_link %>
+                        <img class="card-img-top" src="<%= link %>" alt="Book Cover">
+                        <div class="card-body d-flex flex-column justify-content-center">
+                            <h5 class="card-title book-title"><%= book.title %></h5>
+                            <p class="card-text book-author">by <%= book.author %></p>
+                        </div>
+                        <form id="book-form-<%= book.title %>" action="/page" method="post" style="display: none;">
+                            <input type="hidden" name="book_name" value="<%= book.title %>">
+                        </form>
+                    </div>
+                <% }) %>
+            <% } %>
+        </div>
+    </div>
       <div style="background-color: #89288f; height: 7vh;"></div>
       <footer style="background: #89288f;">
         <div class="row g-0 pt-n5">
