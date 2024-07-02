@@ -292,6 +292,7 @@ app.get("/search", (req, res) => {
 
 //Render user_open.ejs file
 app.get("/user_open", async (req, res) => {
+    if(name!=="" && email!==""){
     if (res) {
         const getRandomBooks = (books, count) => {
             const shuffled = books.sort(() => 0.5 - Math.random());
@@ -346,7 +347,6 @@ app.get("/user_open", async (req, res) => {
             res.status(500).send('Server error');
         }
     }
-    if(name!=="" && email!==""){
     res.render(__dirname + "/views/user_open.ejs", {
         Name: name,
         email: email,
@@ -874,6 +874,10 @@ app.get("/club",(req,res)=>{
 //Render sitemap.ejs file
 app.get("/sitemap",(req,res)=>{
     res.render(__dirname+"/views/sitemap.ejs");
+});
+
+app.get("/timings",(req,res)=>{
+    res.sendFile(__dirname+"/views/timings.html");
 });
 
 //Render code_of_conduct.ejs file
