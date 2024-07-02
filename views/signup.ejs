@@ -35,7 +35,7 @@
                 <div class="row mb-2">
                 <label class="col-md-3 col-form-label form-field-mandatory" for="mail">Email</label>
                 <div class="col">
-                    <input type="text" class="form-control" name="mail" id="mail" placeholder="Email" aria-label="Email" required="required" maxlength="64" onchange="check_availability()">
+                    <input type="email" class="form-control" name="mail" id="mail" placeholder="Email" aria-label="Email" required="required" maxlength="64" onchange="check_availability()">
                     <small id="acc-avail"></small>
                 </div>
             </div>
@@ -45,9 +45,24 @@
                     <input type="password" class="form-control" id="password" name="pswd" placeholder="Password" aria-label="Password" required="required">
                 </div>
             </div>
+            <div class="row mb-2">
+                <label for="branch" class="col-md-3 col-form-label form-field-mandatory">Branch</label>
+                <div class="col">
+                    <input type="text" class="form-control form-control-dark" placeholder="Enter your branch" aria-label="branch" list="branch" class="form-control" name="branch_name" required>
+                    <datalist id="branch">
+                        <option>Computer Science</option>
+                        <option>Electrical Engineering</option>
+                        <option>Mechanical Engineering</option>
+                        <option>Civil Engineering</option>
+                        <option>Chemical Engineering</option>
+                        <option>Engineering Physics</option>
+                    </datalist>
+                </div>
+            </div>
             <hr>
             <div>
-                <button id="submit" class="btn btn-success offset-md-5 mb-1 " type="submit">Submit</button>
+                <button id="submit" class="btn btn-success offset-md-5 mb-1 " type="submit">Submit</button><br/>
+                <input type="checkbox" class="offset-md-3" required> I have read and agreed to the Terms and Conditions and Privacy Policy.
             </div>
         </form>
         <div class="offset-md-4 mb-1" style="color: red;">
