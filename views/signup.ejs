@@ -118,6 +118,9 @@
                 <hr>
                 <div>
                     <button id="submit" class="btn btn-success offset-md-5 mb-1 " type="submit">Submit</button><br/>
+                    <% if(locals.access) {%>  
+                    <h6 style="text-align: center; color: red;"><%= access %></h6>
+                    <% } %>
                     <input type="checkbox" required> I have read and agreed to the Terms and Conditions and Privacy Policy.
                 </div>
             </form>

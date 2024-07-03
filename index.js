@@ -340,8 +340,9 @@ app.post("/signup", async (req, res) => {
     const Branch = req.body.branch_name;
     const check = username.slice(username.indexOf('@')+1);
     if(check!=='iitdh.ac.in'){
-        console.log("Access denied");
-        res.redirect("/");
+        res.render(__dirname+"/views/signup.ejs",{
+            access: "Access Denied",
+        });
     }
     else{
     try {
