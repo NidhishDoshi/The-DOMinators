@@ -1,5 +1,5 @@
 //Importing Libraries
-import express from "express";
+import express, { response } from "express";
 import bodyParser from "body-parser";
 import { fileURLToPath } from "url";
 import { dirname, resolve } from "path";
@@ -60,6 +60,8 @@ app.use(bodyParser.urlencoded({ extended: true })); //Make the parsed data acces
 let books = [];
 var name="";
 var email="";
+var r_email="";
+var code=0;
 let cs_all_books = [];
 let me_all_books = [];
 let ee_all_books = [];
@@ -230,6 +232,103 @@ app.post("/login", async (req, res) => {
         catch(err){
         console.error("Error: ",err);}
     }
+});
+
+app.get("/forgot_password",(req,res)=>{
+    res.render(__dirname+"/views/forgot_password.ejs");
+});
+
+app.post("/reset_password",async (req,res)=>{
+    r_email = req.body.email;
+    const result = await new Promise((resolve,reject)=>{
+        db.query(`SELECT * FROM users WHERE email = ?`,[r_email],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    if(result.length > 0){
+    code = Math.floor(Math.random()*10000);
+    let transporter = nodemailer.createTransport({
+        host: 'smtp.gmail.com',
+        port: 465,
+        secure: true,
+        auth: {
+            user: 'thedominators4444@gmail.com',
+            pass: 'mlja cufb bgtt zkiq'
+        }
+    });
+    let mailOptions = {
+        from: '"The DOMinators" <thedominators4444@gmail.com>',
+        to: r_email,
+        subject: "Reset Password",
+        html: `<!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Document</title>
+        </head>
+        <body>
+            <div style="display: flex; justify-content: center;">
+                <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" width="150px" alt="Logo">
+                <h4 style="color: #89288f; font-size: xx-large;">Reset Password</h4>
+            </div>
+            <div style="text-align: center;">
+                <p style="font-size: x-large;">Secret Code</p>
+                <p style="font-size: x-large;">${code}</p>
+            </div>
+        </body>
+        </html>`,
+    };
+    transporter.sendMail(mailOptions,(error, info)=>{
+        if(error){
+            return console.log(error);
+        }
+        res.render(__dirname+"/views/code.ejs");
+    });}
+    else{
+        res.render(__dirname+"/views/forgot_password.ejs",{
+            response: "User does not exist.",
+        });
+    }
+});
+
+app.post("/code",(req,res)=>{
+    const in_code=req.body.code;
+    if(in_code==code){
+        res.sendFile(__dirname+"/views/reset.html");
+    }
+    else{
+        res.render(__dirname+"/views/code.ejs",{
+            response: "Incorrect Code",
+        });
+    }
+});
+
+app.post("/reset",(req,res)=>{
+    const new_pass = req.body.Password;
+    bcrypt.hash(new_pass,saltRounds,async (err,hash)=>{
+        if(err){
+            console.error("Error: ",err);
+        }
+        else{
+            try{
+                db.query('UPDATE users SET password = ? WHERE email = ?',[hash,r_email],function(err,result){
+                    if(err){
+                        console.error("Error: ",err);
+                    }
+                    else{
+                        res.redirect("/");
+                    }
+                });
+            }
+            catch(err){
+                console.error("Error: ",err);
+            }
+        }
+    });
 });
 
 //Sign-up a new user
