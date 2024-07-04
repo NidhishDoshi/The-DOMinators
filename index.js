@@ -61,7 +61,7 @@ let books = [];
 var name="";
 var email="";
 var r_email="";
-var code=0;
+var code=-1;
 let cs_all_books = [];
 let me_all_books = [];
 let ee_all_books = [];
@@ -210,6 +210,7 @@ app.post("/login", async (req, res) => {
                 else{
                     const pass=result[0].password;
                     name = result[0].fName;
+                    email = result[0].email;
                     bcrypt.compare(password, pass, (err, result) => {
                         if (err) {
                             console.error("Error: ", err);
@@ -217,6 +218,7 @@ app.post("/login", async (req, res) => {
                             if (result) {
                                 res.render(__dirname + "/views/admin_open.ejs", {
                                     Name: name,
+                                    email: email,
                                     books: books,
                                 });
                             } else {
@@ -297,7 +299,7 @@ app.post("/reset_password",async (req,res)=>{
 
 app.post("/code",(req,res)=>{
     const in_code=req.body.code;
-    if(in_code==code){
+    if(in_code==code && in_code>=0){
         res.sendFile(__dirname+"/views/reset.html");
     }
     else{
@@ -891,6 +893,77 @@ app.post("/return",async (req,res)=>{
     catch(err){
         console.error("Error: ",err)
     }
+});
+
+app.post("/admin_return",async (req,res)=>{
+    const title=req.body.title;
+    const email_use = req.body.email
+    const email1=email_use.slice(0,email_use.indexOf('@'));
+    const date=new Date();
+    try{
+        const sql1 = `UPDATE ${email1} SET returned_date = ? WHERE (title = ? AND (queue_pos IS NULL OR queue_pos = 0))`
+        db.execute(sql1,[date,title]);
+        const result1 = await new Promise((resolve,reject)=>{
+            db.query("SELECT queue FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
+                if(err){
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+        if(result1[0].queue==0){
+        db.query("UPDATE `TABLE 1` SET count = count+1 WHERE title=?",[title],function(err,result){
+            if(err)
+            console.error("Error: ",err);
+            else{
+                res.redirect("/users_admin");
+            }
+        });}
+        else{
+            await new Promise((resolve,reject)=>{
+                db.query("UPDATE `TABLE 1` SET queue=queue-1 WHERE title=? AND queue <> 0",[title],(err,result)=>{
+                    if(err){
+                        return reject(err);
+                    }
+                    resolve(result);
+                });
+            });
+            const result2 = await new Promise((resolve,reject)=>{
+                db.query("SELECT email FROM users",(err,result)=>{
+                    if(err){
+                        return reject(err);
+                    }
+                    resolve(result);
+                });
+            });
+            for(var i=0;i<result2.length;i++){
+                const email1 = result2[i].email.slice(0,result2[i].email.indexOf('@'));
+                const date=new Date();
+                const sql1 = `UPDATE ${email1} SET borrowed_date=?, queue_pos=0 WHERE title=? AND queue_pos=1`
+                await new Promise((resolve,reject)=>{
+                    db.query(sql1,[date,title],(err,result)=>{
+                        if(err){
+                            return reject(err);
+                        }
+                        resolve(result);
+                    });
+                });
+                const sql = `UPDATE ${email1} SET queue_pos=queue_pos-1 WHERE title = ? AND queue_pos > 1`
+                await new Promise((resolve,reject)=>{
+                    db.query(sql,[title],(err,result)=>{
+                        if(err){
+                            return reject(err);
+                        }
+                        resolve(result);
+                    });
+                });
+            }
+            res.redirect("/users_admin");
+        }
+    }
+    catch(err){
+        console.error("Error: ",err)
+    }
 })
 
 app.get("/profile",async (req,res)=>{
@@ -1274,6 +1347,338 @@ const job = new cron.CronJob('0 0 * * *',async ()=>{
         }
     }},null,true,'IST');
 job.start();
+
+app.get("/admin_profile",(req,res)=>{
+    if(name=='Admin'){
+        res.render(__dirname+"/views/admin_profile.ejs",{
+            Name: name,
+            books: books,
+            email: email,
+        });
+    }
+});
+
+app.get("/suggestions_admin", async (req,res)=>{
+   if(name=='Admin'){
+    const result = await new Promise((resolve,reject)=>{
+        db.query("SELECT * FROM suggestion",(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.render(__dirname+"/views/suggestions_admin.ejs",{
+        Name: name,
+        books: books,
+        suggestions: result,
+    });
+   } 
+});
+
+app.post("/del_suggestion",async (req,res)=>{
+    const user_email = req.body.name;
+    const title = req.body.title;
+    await new Promise((resolve,reject)=>{
+        db.query('DELETE FROM suggestion WHERE email = ? AND title = ?',[user_email,title],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/suggestions_admin");
+});
+
+app.get("/users_admin",async (req,res)=>{
+    if(name=='Admin'){
+        const result = await new Promise((resolve,reject)=>{
+            db.query('SELECT * FROM users',(err,result)=>{
+                if(err){
+                    return reject(err);
+                }
+                resolve(result);
+            });
+        });
+        res.render(__dirname+"/views/users_admin.ejs",{
+            Name: name,
+            books: books,
+            users: result,
+        });
+    }
+});
+
+app.post("/update-fName",async (req,res)=>{
+    const change = req.body.fName;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE users SET fName = ? WHERE email = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/users_admin");
+});
+
+app.post("/update-lName",async (req,res)=>{
+    const change = req.body.lName;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE users SET lName = ? WHERE email = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/users_admin");
+});
+
+app.post("/update-email",async (req,res)=>{
+    const change = req.body.email;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE users SET email = ? WHERE email = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/users_admin");
+});
+
+app.post("/update-branch",async (req,res)=>{
+    const change = req.body.Branch;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE users SET Branch = ? WHERE email = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/users_admin");
+});
+
+app.post("/ind-user",async (req,res)=>{
+    const ind_email = req.body.email;
+    const email1 = ind_email.slice(0,ind_email.indexOf('@'));
+    const sql = `SELECT * FROM ${email1}`;
+    const result = await new Promise((resolve,reject)=>{
+        db.query(sql,(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.render(__dirname+"/views/ind_user.ejs",{
+        Name: name,
+        books: books,
+        user_email: ind_email,
+        result: result
+    });
+});
+
+app.get("/admin_open",(req,res)=>{
+    if(name=='Admin'){
+        res.render(__dirname+"/views/admin_open.ejs",{
+            Name: name,
+            books: books,
+        });
+    }
+    else{
+        res.redirect("/");
+    }
+});
+
+app.get("/books_admin",async (req,res)=>{
+    const result = await new Promise((resolve,reject)=>{
+        db.query("SELECT * FROM `TABLE 1`",(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    if(name=='Admin'){
+    res.render(__dirname+"/views/books_admin.ejs",{
+        Name: name,
+        details: result,
+        books: books
+    });}
+    else{
+        res.redirect("/");
+    }
+});
+
+app.post("/update-title",async (req,res)=>{
+    const change = req.body.title;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET title = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-description",async (req,res)=>{
+    const change = req.body.description;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET description = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-author",async (req,res)=>{
+    const change = req.body.author;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET author = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-genre",async (req,res)=>{
+    const change = req.body.genre;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET genre = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-department",async (req,res)=>{
+    const change = req.body.department;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET department = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-count",async (req,res)=>{
+    const change = req.body.count;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET count = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-vendor",async (req,res)=>{
+    const change = req.body.vendor;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET vendor = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-vendor-id",async (req,res)=>{
+    const change = req.body.vendor_id;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET vendor_id = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-publisher",async (req,res)=>{
+    const change = req.body.publisher;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET publisher = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.post("/update-publisher-id",async (req,res)=>{
+    const change = req.body.publisher_id;
+    const to_change = req.body.placeholder;
+    await new Promise((resolve,reject)=>{
+        db.query("UPDATE `TABLE 1` SET publisher_id = ? WHERE title = ?",[change,to_change],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/books_admin");
+});
+
+app.get("/admin_add_book",(req,res)=>{
+    if(name=='Admin'){
+        res.sendFile(__dirname+"/views/admin_add_book.html");
+    }
+    else{
+        res.redirect("/");
+    }
+});
+
+app.post("/add_book",(req,res)=>{
+    const title = req.body.title;
+    const description = req.body.description;
+    const author = req.body.author;
+    const genre = req.body.genre;
+    const department = req.body.department;
+    const count = req.body.count;
+    const vendor = req.body.vendor;
+    const vendor_id = req.body.vendor_id;
+    const publisher = req.body.publisher;
+    const publisher_id = req.body.publisher_id;
+    db.execute('INSERT INTO `TABLE 1`(title,description,author,genre,department,count,vendor,vendor_id,publisher,publisher_id) VALUES (?,?,?,?,?,?,?,?,?,?)',[title,description,author,genre,department,count,vendor, vendor_id,publisher,publisher_id]);
+    res.redirect("/books_admin");
+});
 
 //Render terms_and_conditions.ejs file
 app.get("/terms_and_conditions",(req,res)=>{
