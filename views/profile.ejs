@@ -87,7 +87,9 @@
         </div>
     </div>
     <% if(locals.history){ %>
-            <h3>History</h3>
+            <div class="container">
+              <h3>History</h3>
+            </div>
             <% for(var i=0;i<history.length;i++) { %>
             <div style="display: flex; gap: 20px;" class="container mb-3">
                 <img src="<%= photos[i] %>" alt="Book Cover" width="150px">
@@ -115,5 +117,8 @@
                 <a href="/user_open"><button class="btn btn-success btn-outline-dark">Start</button></a>
             </div>
             <% } %>
+            <div style="display: flex; justify-content: center;" class="mb-5">
+              <a href="/logout"><button class="btn btn-danger btn-outline-light">Logout</button></a>
+            </div>
 </body>
 </html>
