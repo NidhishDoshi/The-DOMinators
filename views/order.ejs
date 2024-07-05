@@ -7,6 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 </head>
 <body>
+  <% const todayDate=new Date() %>
     <div class="px-3 py-2 text-bg-dark border-bottom">
         <div class="container">
           <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
@@ -71,15 +72,32 @@
             <h6 style="font-family: 'Times New Roman', Times, serif; color: #89288f;">Genre: <%= orders[i][4] %></h6>
             <h6 style="font-family: 'Times New Roman', Times, serif; color: #89288f;">Department: <%= orders[i][3] %></h6>
             <% if(orders[i][7]!==0){ %>
-            <% var a = orders[i][7]; %>
+            <% var a = new Date(orders[i][7]); %>
             <% a.setDate(a.getDate()+14); %>
+            <% var b = new Date(); %>
             <h5 style="font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Borrowed On: <%= orders[i][7] %></h5>
             <h5 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Return By: <%= a %></h5>
+            <%if(((todayDate-orders[i][7])/(1000 * 60 * 60 * 24))>14){%>
+              <%const fine=(Math.floor((todayDate-orders[i][7])/(1000 * 60 * 60 * 24))-14)*50%>
+              <h5 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Fine: ₹<%= fine%></h5>
+             <% }else{ %>
+             <% const fine=0 %>
+             <h5 style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Fine: ₹<%= fine%></h5>
+              <% } %>
+            <% if((Math.round(Math.abs(a.getTime()-b.getTime()))/(1000*60*60*24))<=2){ %>
+            <% if(orders[i][8]==0){ %>
             <form action="/return" method="post">
-              <button class="btn btn-success btn-outline-light">Return</button>
+              <button class="btn btn-success btn-outline-light">Renew</button>
               <input hidden name="title" value="<%= orders[i][0] %>">
             </form>
             <% } else { %>
+              <div style="display: flex; gap: 20px;">
+                <button disabled class="btn btn-danger">Renew</button>
+                <div class="pt-2">
+                  <p><span style="color: red;">*</span>Shortage of books. Cannot Renew.</p>
+                </div>
+              </div>
+            <% }}} else { %>
               <h5 style="font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Queue No: <%= orders[i][8] %></h5>
               <% } %>
           </div>

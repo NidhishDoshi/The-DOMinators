@@ -92,21 +92,35 @@
             </div>
             <% for(var i=0;i<history.length;i++) { %>
             <div style="display: flex; gap: 20px;" class="container mb-3">
-                <img src="<%= photos[i] %>" alt="Book Cover" width="150px">
+                <img src="<%= photos[i*2] %>" alt="Book Cover" width="150px">
                 <div>
                     <h4 style="font-family: 'Times New Roman', Times, serif; color: #89288f;"><%= history[i].title %></h4>
                     <h5 style="font-family: 'Times New Roman', Times, serif; color: #89288f;">- <%= history[i].author %></h5>
                     <h6 style="font-family: 'Times New Roman', Times, serif; color: #89288f;">Genre: <%= history[i].genre %></h6>
                     <h6 style="font-family: 'Times New Roman', Times, serif; color: #89288f;">Department: <%= history[i].department %></h6>
-                    <% if(history[i].borrowed_date!== null) %>
+                    <% if(history[i].borrowed_date!== null){ %>
                     <h6 style="font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Borrowed On: <%= history[i].borrowed_date %></h6>
                     <% if(history[i].returned_date!== null) {%>
                     <h6 style="font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Returned On: <%= history[i].returned_date %></h6>
                     <% } else { %>
+                        <% var a = new Date(history[i].borrowed_date); %>
+                        <% a.setDate(a.getDate()+14); %>
+                        <% var b = new Date(); %>
+                        <% if((Math.round(Math.abs(a.getTime()-b.getTime()))/(1000*60*60*24))<=2){ %>
+                        <% if(photos[(2*i)+1]==0){ %>
                         <form action="/return" method="post">
-                            <button class="btn btn-success btn-outline-light">Return</button>
+                            <button class="btn btn-success btn-outline-light">Renew</button>
                             <input hidden name="title" value="<%= history[i].title %>">
                           </form>
+                          <% } else { %>
+                            <div style="display: flex; gap: 20px;">
+                              <button disabled class="btn btn-danger">Renew</button>
+                              <div class="pt-2">
+                                <p><span style="color: red;">*</span>Shortage of books. Cannot Renew.</p>
+                              </div>
+                            </div>
+                    <% }}}}else{ %>
+                      <h6 style="font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; color: red;">Queue Position: <%= history[i].queue_pos %></h6>
                     <% } %>
                 </div>
             </div>

@@ -772,7 +772,7 @@ app.get("/order", async (req, res) => {
                 ans1.push(result2[0].vendor);
                 ans1.push(result2[0].publisher);
                 ans1.push(borrow_now);
-                ans1.push(0);
+                ans1.push(result2[0].queue);
             }
             ans.push(ans1);
         }
@@ -830,10 +830,10 @@ app.post("/return",async (req,res)=>{
     const email1=email.slice(0,email.indexOf('@'));
     const date=new Date();
     try{
-        const sql1 = `UPDATE ${email1} SET returned_date = ? WHERE (title = ? AND (queue_pos IS NULL OR queue_pos = 0))`
+        const sql1 = `UPDATE ${email1} SET returned_date = ? WHERE (title = ? AND (queue_pos IS NULL OR queue_pos = 0) AND returned_date IS NULL)`
         db.execute(sql1,[date,title]);
         const result1 = await new Promise((resolve,reject)=>{
-            db.query("SELECT queue FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
+            db.query("SELECT * FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
                 if(err){
                     return reject(err);
                 }
@@ -841,13 +841,10 @@ app.post("/return",async (req,res)=>{
             });
         });
         if(result1[0].queue==0){
-        db.query("UPDATE `TABLE 1` SET count = count+1 WHERE title=?",[title],function(err,result){
-            if(err)
-            console.error("Error: ",err);
-            else{
-                res.redirect("/order");
-            }
-        });}
+            var c_date = new Date();
+            db.execute(`INSERT INTO ${email1} (title, author, genre, department, vendor, publisher, borrowed_date) VALUES(?, ?, ?, ?, ?, ?, ?)`,[result1[0].title,result1[0].author,result1[0].genre,result1[0].department,result1[0].vendor,result1[0].publisher,c_date]);
+            res.redirect("/order");
+    }
         else{
             await new Promise((resolve,reject)=>{
                 db.query("UPDATE `TABLE 1` SET queue=queue-1 WHERE title=? AND queue <> 0",[title],(err,result)=>{
@@ -901,7 +898,7 @@ app.post("/admin_return",async (req,res)=>{
     const email1=email_use.slice(0,email_use.indexOf('@'));
     const date=new Date();
     try{
-        const sql1 = `UPDATE ${email1} SET returned_date = ? WHERE (title = ? AND (queue_pos IS NULL OR queue_pos = 0))`
+        const sql1 = `UPDATE ${email1} SET returned_date = ? WHERE (title = ? AND (queue_pos IS NULL OR queue_pos = 0) AND returned_date IS NULL)`
         db.execute(sql1,[date,title]);
         const result1 = await new Promise((resolve,reject)=>{
             db.query("SELECT queue FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
@@ -990,7 +987,7 @@ app.get("/profile",async (req,res)=>{
         for(var i=0;i<result.length;i++){
             const title = result[i].title;
             const photo_link = await new Promise((resolve,reject)=>{
-                db.query("SELECT photo_link FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
+                db.query("SELECT photo_link, queue FROM `TABLE 1` WHERE title=?",[title],(err,result)=>{
                     if(err){
                         return reject(err);
                     }
@@ -998,6 +995,7 @@ app.get("/profile",async (req,res)=>{
                 });
             });
             details.push(photo_link[0].photo_link);
+            details.push(photo_link[0].queue);
         }
         res.render(__dirname+"/views/profile.ejs",{
             FName: result1[0].fName,
