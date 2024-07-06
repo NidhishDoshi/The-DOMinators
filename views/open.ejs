@@ -66,18 +66,21 @@
               <li><a href="#" class="nav-link px-2 text-secondary">Home</a></li>
               <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
               <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
-              <li><a href="#" class="nav-link px-2 text-white">About</a></li>
+              <li><a href="/faq" class="nav-link px-2 text-white">FAQs</a></li>
+              <li><a href="/about" class="nav-link px-2 text-white">About</a></li>
             </ul>
     
-            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
-              <input type="text" class="form-control form-control-dark" placeholder="Search..." aria-label="Search" list="books">
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search" action="/login">
+              <input type="text" class="form-control form-control-dark mx-2" placeholder="Search..." aria-label="Search" list="books">
               <datalist id="books">
                   <% if(locals.books) { %>
                   <% for(var i=0;i<books.length;i++) { %>
                   <option><%= books[i] %></option>
                   <% } } %>
               </datalist>
+              <button class="btn btn-outline-success"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+              </svg></button>
             </form>
     
             <div class="text-end">
