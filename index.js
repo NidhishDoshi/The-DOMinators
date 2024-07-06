@@ -16,9 +16,9 @@ const saltRounds = 10;
 //Establish connection to MySQL database
 const db = mysql.createConnection({
     host: "sql12.freesqldatabase.com",
-    user: "sql12716910",
-    database: "sql12716910",
-    password: "1XLPQnaY8B",
+    user: "sql12718340",
+    database: "sql12718340",
+    password: "EFaXs1NFt8",
     port: 3306,
 });
 
@@ -1716,6 +1716,10 @@ app.get("/coc",(req,res)=>{
 app.get("/about",(req,res)=>{
     res.render(__dirname+"/views/about.ejs");
 });
+
+app.get("/faq",(req,res)=>{
+    res.sendFile(__dirname+"/views/faq.html");
+})
 
 //Send branding.html file
 app.get("/branding",(req,res)=>{
