@@ -1343,7 +1343,20 @@ const job = new cron.CronJob('0 0 * * *',async ()=>{
             if(r_date.getDate()===date.getDate()){
             sendEmail(result1[i].email,"Return Alert",result2[j].title,return_date);}
         }
-    }},null,true,'IST');
+    }
+    var next_date = new Date();
+    next_date.setDate(next_date.getDate()+1);
+    next_date = next_date.toLocaleDateString();
+    next_date = '_' + next_date.slice(0,next_date.indexOf('/'))+'_'+next_date.slice(next_date.indexOf('/')+1,next_date.lastIndexOf('/'))+'_'+next_date.slice(next_date.lastIndexOf('/')+1);
+    var prev_date = new Date();
+    prev_date.setDate(prev_date.getDate()-1);
+    prev_date = prev_date.toLocaleDateString();
+    prev_date = '_' + prev_date.slice(0,prev_date.indexOf('/'))+'_'+prev_date.slice(prev_date.indexOf('/')+1,prev_date.lastIndexOf('/'))+'_'+prev_date.slice(prev_date.lastIndexOf('/')+1);
+    const sql = `CREATE TABLE ${next_date}(books TEXT, first TEXT, second TEXT, third TEXT, fourth TEXT)`
+    db.execute(sql);
+    const sql1 = `DROP TABLE IF EXISTS ${prev_date}`
+    db.execute(sql1);
+},null,true,'IST');
 job.start();
 
 app.get("/admin_profile",(req,res)=>{
@@ -1658,6 +1671,167 @@ app.get("/admin_add_book",(req,res)=>{
     if(name=='Admin'){
         res.sendFile(__dirname+"/views/admin_add_book.html");
     }
+    else{
+        res.redirect("/");
+    }
+});
+
+app.post("/reservation",(req,res)=>{
+    const title = req.body.title;
+    res.render(__dirname+"/views/reservation.ejs",{
+        Name: name,
+        email: email,
+        title: title,
+    });
+});
+
+app.post("/reserve_day",async (req,res)=>{
+    const day = req.body.day;
+    const title = req.body.title;
+    var next_date = new Date();
+    next_date.setDate(next_date.getDate()+1);
+    next_date = next_date.toLocaleDateString();
+    next_date = '_' + next_date.slice(0,next_date.indexOf('/'))+'_'+next_date.slice(next_date.indexOf('/')+1,next_date.lastIndexOf('/'))+'_'+next_date.slice(next_date.lastIndexOf('/')+1);
+    var date = new Date();
+    date.setDate(date.getDate());
+    date = date.toLocaleDateString();
+    date = '_' + date.slice(0,date.indexOf('/'))+'_'+date.slice(date.indexOf('/')+1,date.lastIndexOf('/'))+'_'+date.slice(date.lastIndexOf('/')+1);
+    const result1 = await new Promise((resolve,reject)=>{
+        db.query(`SELECT * FROM ${date} WHERE books=?`,[title],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result2 = await new Promise((resolve,reject)=>{
+        db.query(`SELECT * FROM ${next_date} WHERE books=?`,[title],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    if(day=='Date1'){
+    res.render(__dirname+"/views/reserve.ejs",{
+        Name: name,
+        books: books,
+        date: result1,
+        day: 1,
+        title: title,
+    });}
+    else{
+        res.render(__dirname+"/views/reserve.ejs",{
+            Name: name,
+            books: books,
+            date: result2,
+            day: 2,
+            title: title,
+        });
+    }
+});
+
+app.post("/reserve",async (req,res)=>{
+    const title = req.body.title;
+    const slot = req.body.slot;
+    const day = req.body.day;
+    if(slot==1){
+        var time = 'first';
+    }
+    else if(slot==2){
+        var time='second';
+    }
+    else if(slot==3){
+        var time='third';
+    }
+    else{
+        var time='fourth';
+    }
+    if(day==1){
+        var date = new Date();
+        date.setDate(date.getDate());
+        date = date.toLocaleDateString();
+        date = '_' + date.slice(0,date.indexOf('/'))+'_'+date.slice(date.indexOf('/')+1,date.lastIndexOf('/'))+'_'+date.slice(date.lastIndexOf('/')+1);
+    }
+    else{
+        var date = new Date();
+        date.setDate(date.getDate()+1);
+        date = date.toLocaleDateString();
+        date = '_' + date.slice(0,date.indexOf('/'))+'_'+date.slice(date.indexOf('/')+1,date.lastIndexOf('/'))+'_'+date.slice(date.lastIndexOf('/')+1);
+    }
+    await new Promise((resolve,reject)=>{
+        db.query(`UPDATE ${date} SET ${time} = ? WHERE books=?`,[name,title],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.redirect("/user_open");
+});
+
+app.get("/recommendations", async (req, res) => {
+    if(name!=="" && email!==""){
+    if (res) {
+        const getRandomBooks = (books, count) => {
+            const shuffled = books.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, count);
+        };
+
+        const username=email.slice(0,email.indexOf('@'));
+
+        try {
+            // Get user department
+            const [user] = await db.promise().query(`SELECT Branch FROM users WHERE email = ?`, [email]);
+            if (user.length === 0) {
+                return res.status(404).send('User not found');
+            }
+            const Branch = user[0].Branch;
+            const [borrowedBooks] = await db.promise().query(`SELECT title FROM ${username}`);
+            const borrowedBookIds = borrowedBooks.map(b => b.title);
+
+
+            if (borrowedBooks.length > 0) {
+                // Get genres of borrowed books
+                const [genresResult] = await db.promise().query("SELECT DISTINCT genre FROM `TABLE 1` WHERE title IN (?)", [borrowedBookIds]);
+                const genres = genresResult.map(g => g.genre);
+
+                // Get books from these genres excluding borrowed books
+                const [booksByGenres] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE genre IN (?) AND title NOT IN (?)", [genres, borrowedBookIds]);
+
+                recommendations = getRandomBooks(booksByGenres, 7);
+
+                if (recommendations.length < 7) {
+                    // Get books from user's department
+                    const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ? AND title NOT IN (?)", [Branch, borrowedBookIds]);
+                    recommendations = recommendations.concat(getRandomBooks(booksByDept, 7 - recommendations.length));
+                }
+
+                // Get random books
+                const [allBooks] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE title NOT IN (?)", [borrowedBookIds]);
+                recommendations = recommendations.concat(getRandomBooks(allBooks, 2));
+            } else {
+                // Get books from user's department
+                const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ?", [Branch]);
+                recommendations = getRandomBooks(booksByDept, 7);
+
+                // Get books from other departments
+                const [booksOtherDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department != ?", [Branch]);
+                recommendations = recommendations.concat(getRandomBooks(booksOtherDept, 2));
+
+            }
+
+        } catch (error) {
+            console.error(error);
+            res.status(500).send('Server error');
+        }
+    }
+    res.render(__dirname + "/views/recommendations.ejs", {
+        Name: name,
+        email: email,
+        books: books,
+        recommendations: recommendations
+    });}
     else{
         res.redirect("/");
     }
