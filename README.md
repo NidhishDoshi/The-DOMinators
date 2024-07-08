@@ -43,4 +43,9 @@ To view the website, go to:
 https://localhost:3000
 
 ```
+### Important Notice Regarding Usage of Free Hosting Services
+•Due to the use of free hosting services, there might be instances when our allocated usage quota is exhausted, resulting in a temporary inability to connect to the database. Should this occur, please contact our team immediately. We will promptly restore the database using alternative credentials.<br/>
+Please be aware that when we switch to a new free hosting service, all existing user data will be lost.<br/>
+•Free hosting services may occasionally limit the number of concurrent connections, which can prevent access to the database. If you encounter this issue, please try again after some time.<br/>
+<br/>
 *Created in **DevShelf** during the **Summer of Innovation, 2024**.*

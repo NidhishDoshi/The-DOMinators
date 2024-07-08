@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suggestions - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        .editable-cell {
+            border: none;
+            background: none;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: inherit;
+            font-family: inherit;
+            color: inherit;
+            outline: none;
+            white-space: pre-wrap;
+            overflow: visible;
+            resize: none;
+        }
+
+        .my-cell-class {
+            white-space: normal;
+            vertical-align: top;
+        }
+
+        .blog-footer {
+            display: flex;
+            justify-content: end;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="px-3 py-2 text-bg-dark border-bottom">
+        <div>
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+                <a href="https://iitdh.ac.in"
+                    class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
+                    <img src="https://election.iitdh.ac.in/static/media/logog.084b1a7a95f4bcd9fccd.png" alt="Logo"
+                        height="50px">
+                </a>
+                <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3 d-flex" role="search" action="/page"
+                    method="post">
+                    <input type="text" class="form-control form-control-dark mx-2" placeholder="Search..."
+                        aria-label="Search" list="books" name="book_name">
+                    <datalist id="books">
+                        <% if(locals.books) { %>
+                        <% for(var i=0;i<books.length;i++) { %>
+                        <option><%= books[i] %></option>
+                        <% } } %>
+                    </datalist>
+                    <button type="submit" class="btn btn-outline-success">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                            class="bi bi-search" viewBox="0 0 16 16">
+                            <path
+                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                        </svg>
+                    </button>
+                </form>
+                <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
+                    <li>
+                        <a href="/admin_open" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" class="bi bi-house-door" viewBox="0 0 16 16">
+                                <path
+                                    d="M8.354 1.146a.5.5 0 0 0-.708 0l-6 6A.5.5 0 0 0 1.5 7.5v7a.5.5 0 0 0 .5.5h4.5a.5.5 0 0 0 .5-.5v-4h2v4a.5.5 0 0 0 .5.5H14a.5.5 0 0 0 .5-.5v-7a.5.5 0 0 0-.146-.354L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM2.5 14V7.707l5.5-5.5 5.5 5.5V14H10v-4a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5v4z" />
+                            </svg>
+                            Home
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/books_admin" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" class="bi bi-book" viewBox="0 0 16 16">
+                                <path
+                                    d="M1 2.828c.885-.37 2.154-.769 3.388-.893 1.33-.134 2.458.063 3.112.752v9.746c-.935-.53-2.12-.603-3.213-.493-1.18.12-2.37.461-3.287.811zm7.5-.141c.654-.689 1.782-.886 3.112-.752 1.234.124 2.503.523 3.388.893v9.923c-.918-.35-2.107-.692-3.287-.81-1.094-.111-2.278-.039-3.213.492zM8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783" />
+                            </svg>
+                            Books
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/users_admin" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" class="bi bi-people" viewBox="0 0 16 16">
+                                <path
+                                    d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4" />
+                            </svg>
+                            Users
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/suggestions_admin" class="nav-link text-secondary">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" class="bi bi-lightbulb" viewBox="0 0 16 16">
+                                <path
+                                    d="M2 6a6 6 0 1 1 10.174 4.31c-.203.196-.359.4-.453.619l-.762 1.769A.5.5 0 0 1 10.5 13a.5.5 0 0 1 0 1 .5.5 0 0 1 0 1l-.224.447a1 1 0 0 1-.894.553H6.618a1 1 0 0 1-.894-.553L5.5 15a.5.5 0 0 1 0-1 .5.5 0 0 1 0-1 .5.5 0 0 1-.46-.302l-.761-1.77a2 2 0 0 0-.453-.618A5.98 5.98 0 0 1 2 6m6-5a5 5 0 0 0-3.479 8.592c.263.254.514.564.676.941L5.83 12h4.342l.632-1.467c.162-.377.413-.687.676-.941A5 5 0 0 0 8 1" />
+                            </svg>
+                            Suggestions
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/admin_profile" class="nav-link text-white">
+                            <svg class="bi d-block mx-auto mb-1" xmlns="http://www.w3.org/2000/svg" width="24"
+                                height="24" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                <path
+                                    d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                            </svg>
+                            <%= Name %>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <% if(locals.suggestions) { %>
+    <div class="container">
+        <% for(var i=0;i<suggestions.length;i++){ %>
+        <div class="container border my-3 py-3">
+            <p class="fw-bold"><%= suggestions[i].title %></p>
+            <p class="fw-bold">by <%= suggestions[i].author %></p>
+            <p>Vendor: <span class="fw-bold"><%= suggestions[i].vendor %></span></p>
+            <p>Published by: <span class="fw-bold"><%= suggestions[i].publisher %></span></p>
+            <p>Department: <span class="fw-bold"><%= suggestions[i].department %></span></p>
+            <footer class="blog-footer">Thanking you,</footer>
+            <footer class="blog-footer">- <%= suggestions[i].name %>,</footer>
+            <footer class="blog-footer"><%= suggestions[i].email %></footer>
+            <div class="d-flex justify-content-around mt-3">
+                <form method="post" action="/del_suggestion">
+                    <input type="hidden" name="name" value="<%= suggestions[i].email %>">
+                    <input type="hidden" name="title" value="<%= suggestions[i].title %>">
+                    <button type="submit" class="btn btn-success">Implemented</button>
+                </form>
+                <form method="post" action="/del_suggestion">
+                    <input type="hidden" name="name" value="<%= suggestions[i].email %>">
+                    <input type="hidden" name="title" value="<%= suggestions[i].title %>">
+                    <button type="submit" class="btn btn-danger">Ignore</button>
+                </form>
+            </div>
+        </div>
+        <% } %>
+    </div>
+    <% } else { %>
+    <div class="container">
+        <div class="d-flex justify-content-center">
+            <h1>No suggestions yet.</h1>
+        </div>
+    </div>
+    <% } %>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+        integrity="sha384-GMSJjAuWJcOwjyTM2xPMzFLUDtS1QDc0cIy/gT8fpFgyVYKJ3o/66p9HlPz9My2w" crossorigin="anonymous">
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
+        integrity="sha384-xyBzGVjFQpOm06f6HftvZqfjyYmupLp27zVv6zrCE/nCC9WHoA/AMKtpL0F9afVk" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

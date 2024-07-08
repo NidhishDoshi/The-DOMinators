@@ -103,7 +103,7 @@
               </div><br/>
             </div>
           </div>
-          <div class="col-md-4 container">
+          <div class="col-md-4 container" style="display: flex; gap: 30px;">
             <form action="/page1" method="post">
                 <% if(count>0){ %>
                 <button name="button" value="borrow" class="btn btn-success">Borrow</button>
@@ -117,7 +117,10 @@
                 </div>
             <% } %>
             </form>
-            
+            <form action="/reservation" method="post">
+              <button class="btn btn-success">Reserve</button>
+              <input hidden name="title" value="<%= title %>">
+            </form>
           </div>
         </div>
       </div>
