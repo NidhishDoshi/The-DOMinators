@@ -1527,6 +1527,25 @@ app.get("/books_admin",async (req,res)=>{
     }
 });
 
+app.get("/reservation_admin",async (req,res)=>{
+    var prev_date = new Date();
+    prev_date.setDate(prev_date.getDate());
+    prev_date = prev_date.toLocaleDateString();
+    prev_date = '_' + prev_date.slice(0,prev_date.indexOf('/'))+'_'+prev_date.slice(prev_date.indexOf('/')+1,prev_date.lastIndexOf('/'))+'_'+prev_date.slice(prev_date.lastIndexOf('/')+1);
+    const result1 = await new Promise((resolve,reject)=>{
+        db.query(`SELECT * FROM ${prev_date}`,(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.render(__dirname+"/views/reservation_admin.ejs",{
+        Name: name,
+        day1: result1,
+    });
+});
+
 app.post("/update-title",async (req,res)=>{
     const change = req.body.title;
     const to_change = req.body.placeholder;
