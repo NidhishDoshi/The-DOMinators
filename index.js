@@ -1741,7 +1741,6 @@ app.get("/recommendations", async (req, res) => {
            const Branch = user[0].Branch;
            const [borrowedBooks] = await db.promise().query(`SELECT title FROM ${username}`);
            const borrowedBookTitles = borrowedBooks.map(b => b.title);
-           console.log(borrowedBooks)
            if (borrowedBooks.length > 0) {
                const [genresResult] = await db.promise().query("SELECT DISTINCT genre FROM `TABLE 1` WHERE title IN (?)", [borrowedBookTitles]);
                const genres = genresResult.map(g => g.genre);
@@ -1756,7 +1755,6 @@ app.get("/recommendations", async (req, res) => {
                recommendations = recommendations.concat(getRandomBooks(booksByDept, 7 - recommendations.length));
            }
            recommendations = await ensureNineUniqueBooks(recommendations, borrowedBookTitles, Branch);
-           console.log(recommendations);
     } catch (error) {
            console.error(error);
            res.status(500).send('Server error');
