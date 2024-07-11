@@ -1786,6 +1786,102 @@ app.post("/add_book",(req,res)=>{
     res.redirect("/books_admin");
 });
 
+app.get("/upcoming_reservation",async (req,res)=>{
+    var next_date = new Date();
+    next_date.setDate(next_date.getDate()+1);
+    next_date = next_date.toLocaleDateString();
+    next_date = '_' + next_date.slice(0,next_date.indexOf('/'))+'_'+next_date.slice(next_date.indexOf('/')+1,next_date.lastIndexOf('/'))+'_'+next_date.slice(next_date.lastIndexOf('/')+1);
+    var date = new Date();
+    date.setDate(date.getDate());
+    date = date.toLocaleDateString();
+    date = '_' + date.slice(0,date.indexOf('/'))+'_'+date.slice(date.indexOf('/')+1,date.lastIndexOf('/'))+'_'+date.slice(date.lastIndexOf('/')+1);
+    const result11 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE first=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result12 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE second=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result13 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE third=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result14 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE fourth=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result21 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE first=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result22 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE second=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result23 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE third=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result24 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE fourth=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.render(__dirname+"/views/upcoming_reservations.ejs",{
+        Name: name,
+        email: email,
+        books: books,
+        r11: result11,
+        r12: result12,
+        r13: result13,
+        r14: result14,
+        r21: result21,
+        r22: result22,
+        r23: result23,
+        r24: result24
+    });
+});
+
 //Render terms_and_conditions.ejs file
 app.get("/terms_and_conditions",(req,res)=>{
   res.render(__dirname+"/views/terms_and_conditions.ejs");
