@@ -16,9 +16,9 @@ const saltRounds = 10;
 //Establish connection to MySQL database
 const db = mysql.createConnection({
     host: "sql12.freesqldatabase.com",
-    user: "sql12718340",
-    database: "sql12718340",
-    password: "EFaXs1NFt8",
+    user: "sql12719558",
+    database: "sql12719558",
+    password: "S6Tmt7nQy8",
     port: 3306,
 });
 
