@@ -16,9 +16,9 @@ const saltRounds = 10;
 //Establish connection to MySQL database
 const db = mysql.createConnection({
     host: "sql12.freesqldatabase.com",
-    user: "sql12718340",
-    database: "sql12718340",
-    password: "EFaXs1NFt8",
+    user: "sql12719558",
+    database: "sql12719558",
+    password: "S6Tmt7nQy8",
     port: 3306,
 });
 
@@ -68,7 +68,6 @@ let ee_all_books = [];
 let ce_all_books = [];
 let ch_all_books = [];
 let ep_all_books = [];
-let recommendations = [];
 
 //Get titles of all the books from the database
 try {
@@ -125,64 +124,12 @@ app.post("/login", async (req, res) => {
                             console.error("Error: ", err);
                         } else {
                             if (result) {
-                                const getRandomBooks = (books, count) => {
-                                    const shuffled = books.sort(() => 0.5 - Math.random());
-                                    return shuffled.slice(0, count);
-                                };
-
-                                const username=email.slice(0,email.indexOf('@'));
-
-                                try {
-                                    // Get user department
-                                    const [user] = await db.promise().query(`SELECT Branch FROM users WHERE email = ?`, [email]);
-                                    if (user.length === 0) {
-                                        return res.status(404).send('User not found');
-                                    }
-                                    const Branch = user[0].Branch;
-                                    const [borrowedBooks] = await db.promise().query(`SELECT title FROM ${username}`);
-                                    const borrowedBookIds = borrowedBooks.map(b => b.title);
-
-
-                                    if (borrowedBooks.length > 0) {
-                                        // Get genres of borrowed books
-                                        const [genresResult] = await db.promise().query("SELECT DISTINCT genre FROM `TABLE 1` WHERE title IN (?)", [borrowedBookIds]);
-                                        const genres = genresResult.map(g => g.genre);
-
-                                        // Get books from these genres excluding borrowed books
-                                        const [booksByGenres] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE genre IN (?) AND title NOT IN (?)", [genres, borrowedBookIds]);
-
-                                        recommendations = getRandomBooks(booksByGenres, 7);
-
-                                        if (recommendations.length < 7) {
-                                            // Get books from user's department
-                                            const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ? AND title NOT IN (?)", [Branch, borrowedBookIds]);
-                                            recommendations = recommendations.concat(getRandomBooks(booksByDept, 7 - recommendations.length));
-                                        }
-
-                                        // Get random books
-                                        const [allBooks] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE title NOT IN (?)", [borrowedBookIds]);
-                                        recommendations = recommendations.concat(getRandomBooks(allBooks, 2));
-                                    } else {
-                                        // Get books from user's department
-                                        const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ?", [Branch]);
-                                        recommendations = getRandomBooks(booksByDept, 7);
-
-                                        // Get books from other departments
-                                        const [booksOtherDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department != ?", [Branch]);
-                                        recommendations = recommendations.concat(getRandomBooks(booksOtherDept, 2));
-
-                                    }
-
-                                } catch (error) {
-                                    console.error(error);
-                                    res.status(500).send('Server error');
-                                }
+                               
 
                                 res.render(__dirname + "/views/user_open.ejs", {
                                     Name: name,
                                     email: email,
                                     books: books,
-                                    recommendations: recommendations
                                 });
                             } else {
                                 res.render(__dirname + "/views/login.ejs", {
@@ -372,7 +319,6 @@ app.post("/signup", async (req, res) => {
                                     Name: fName,
                                     email: email,
                                     books: books,
-                                    recommendations: recommendations
                                 });
                             } catch (err) {
                                 console.error("Error: ", err);
@@ -398,64 +344,11 @@ app.get("/search", (req, res) => {
 app.get("/user_open", async (req, res) => {
     if(name!=="" && email!==""){
     if (res) {
-        const getRandomBooks = (books, count) => {
-            const shuffled = books.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        };
-
-        const username=email.slice(0,email.indexOf('@'));
-
-        try {
-            // Get user department
-            const [user] = await db.promise().query(`SELECT Branch FROM users WHERE email = ?`, [email]);
-            if (user.length === 0) {
-                return res.status(404).send('User not found');
-            }
-            const Branch = user[0].Branch;
-            const [borrowedBooks] = await db.promise().query(`SELECT title FROM ${username}`);
-            const borrowedBookIds = borrowedBooks.map(b => b.title);
-
-
-            if (borrowedBooks.length > 0) {
-                // Get genres of borrowed books
-                const [genresResult] = await db.promise().query("SELECT DISTINCT genre FROM `TABLE 1` WHERE title IN (?)", [borrowedBookIds]);
-                const genres = genresResult.map(g => g.genre);
-
-                // Get books from these genres excluding borrowed books
-                const [booksByGenres] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE genre IN (?) AND title NOT IN (?)", [genres, borrowedBookIds]);
-
-                recommendations = getRandomBooks(booksByGenres, 7);
-
-                if (recommendations.length < 7) {
-                    // Get books from user's department
-                    const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ? AND title NOT IN (?)", [Branch, borrowedBookIds]);
-                    recommendations = recommendations.concat(getRandomBooks(booksByDept, 7 - recommendations.length));
-                }
-
-                // Get random books
-                const [allBooks] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE title NOT IN (?)", [borrowedBookIds]);
-                recommendations = recommendations.concat(getRandomBooks(allBooks, 2));
-            } else {
-                // Get books from user's department
-                const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ?", [Branch]);
-                recommendations = getRandomBooks(booksByDept, 7);
-
-                // Get books from other departments
-                const [booksOtherDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department != ?", [Branch]);
-                recommendations = recommendations.concat(getRandomBooks(booksOtherDept, 2));
-
-            }
-
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Server error');
-        }
     }
     res.render(__dirname + "/views/user_open.ejs", {
         Name: name,
         email: email,
         books: books,
-        recommendations: recommendations
     });}
     else{
         res.redirect("/");
@@ -1789,61 +1682,83 @@ app.post("/reserve",async (req,res)=>{
     res.redirect("/user_open");
 });
 
+const getRandomBooks = (books, count) => {
+    let shuffled = books.slice(); 
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; 
+    }
+    return shuffled.slice(0, count);
+};
+const removeDuplicates = (books) => {
+    const seen = new Set();
+    return books.filter(book => {
+        const duplicate = seen.has(book.title);
+        seen.add(book.title);
+        return !duplicate;
+    });
+};
+const ensureNineUniqueBooks = async (initialRecommendations, borrowedBookTitles, department) => {
+    let recommendations = removeDuplicates(initialRecommendations);
+    const requiredCount = 9;
+
+    if (recommendations.length < requiredCount) {
+        
+        const [additionalBooksByDept] = await db.promise().query(
+            "SELECT * FROM `TABLE 1` WHERE department = ? AND title NOT IN (?)", 
+            [department, borrowedBookTitles.concat(recommendations.map(b => b.title))]
+        );
+        recommendations = recommendations.concat(
+            getRandomBooks(additionalBooksByDept, requiredCount - recommendations.length)
+        );
+
+        recommendations = removeDuplicates(recommendations);
+
+        if (recommendations.length < requiredCount) {
+            const [allBooks] = await db.promise().query(
+                "SELECT * FROM `TABLE 1`  WHERE title NOT IN (?)", 
+                [borrowedBookTitles.concat(recommendations.map(b => b.title))]
+            );
+            recommendations = recommendations.concat(
+                getRandomBooks(allBooks, requiredCount - recommendations.length)
+            );
+            recommendations = removeDuplicates(recommendations);
+        }
+    }
+
+    return recommendations.slice(0, requiredCount);
+};
 app.get("/recommendations", async (req, res) => {
+    let recommendations=[];
     if(name!=="" && email!==""){
     if (res) {
-        const getRandomBooks = (books, count) => {
-            const shuffled = books.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, count);
-        };
-
         const username=email.slice(0,email.indexOf('@'));
-
         try {
-            // Get user department
-            const [user] = await db.promise().query(`SELECT Branch FROM users WHERE email = ?`, [email]);
-            if (user.length === 0) {
-                return res.status(404).send('User not found');
-            }
-            const Branch = user[0].Branch;
-            const [borrowedBooks] = await db.promise().query(`SELECT title FROM ${username}`);
-            const borrowedBookIds = borrowedBooks.map(b => b.title);
-
-
-            if (borrowedBooks.length > 0) {
-                // Get genres of borrowed books
-                const [genresResult] = await db.promise().query("SELECT DISTINCT genre FROM `TABLE 1` WHERE title IN (?)", [borrowedBookIds]);
-                const genres = genresResult.map(g => g.genre);
-
-                // Get books from these genres excluding borrowed books
-                const [booksByGenres] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE genre IN (?) AND title NOT IN (?)", [genres, borrowedBookIds]);
-
-                recommendations = getRandomBooks(booksByGenres, 7);
-
-                if (recommendations.length < 7) {
-                    // Get books from user's department
-                    const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ? AND title NOT IN (?)", [Branch, borrowedBookIds]);
-                    recommendations = recommendations.concat(getRandomBooks(booksByDept, 7 - recommendations.length));
-                }
-
-                // Get random books
-                const [allBooks] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE title NOT IN (?)", [borrowedBookIds]);
-                recommendations = recommendations.concat(getRandomBooks(allBooks, 2));
-            } else {
-                // Get books from user's department
-                const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ?", [Branch]);
-                recommendations = getRandomBooks(booksByDept, 7);
-
-                // Get books from other departments
-                const [booksOtherDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department != ?", [Branch]);
-                recommendations = recommendations.concat(getRandomBooks(booksOtherDept, 2));
-
-            }
-
-        } catch (error) {
-            console.error(error);
-            res.status(500).send('Server error');
-        }
+           const [user] = await db.promise().query('SELECT Branch FROM users WHERE email = ?', [email]);
+           if (user.length === 0) {
+               return res.status(404).send('User not found');
+           }
+           const Branch = user[0].Branch;
+           const [borrowedBooks] = await db.promise().query(`SELECT title FROM ${username}`);
+           const borrowedBookTitles = borrowedBooks.map(b => b.title);
+           if (borrowedBooks.length > 0) {
+               const [genresResult] = await db.promise().query("SELECT DISTINCT genre FROM `TABLE 1` WHERE title IN (?)", [borrowedBookTitles]);
+               const genres = genresResult.map(g => g.genre);
+              
+               if (genres.length > 0) {
+               const [booksByGenres] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE genre IN (?) AND title NOT IN (?)", [genres, borrowedBookTitles]);
+               recommendations = getRandomBooks(booksByGenres, 7);
+           } 
+       }
+           if (recommendations.length < 7) {
+               const [booksByDept] = await db.promise().query("SELECT * FROM `TABLE 1` WHERE department = ? AND title NOT IN (?)", [Branch, borrowedBookTitles.length ? borrowedBookTitles : [""]]);
+               recommendations = recommendations.concat(getRandomBooks(booksByDept, 7 - recommendations.length));
+           }
+           recommendations = await ensureNineUniqueBooks(recommendations, borrowedBookTitles, Branch);
+    } catch (error) {
+           console.error(error);
+           res.status(500).send('Server error');
+       }
     }
     res.render(__dirname + "/views/recommendations.ejs", {
         Name: name,
@@ -1869,6 +1784,102 @@ app.post("/add_book",(req,res)=>{
     const publisher_id = req.body.publisher_id;
     db.execute('INSERT INTO `TABLE 1`(title,description,author,genre,department,count,vendor,vendor_id,publisher,publisher_id) VALUES (?,?,?,?,?,?,?,?,?,?)',[title,description,author,genre,department,count,vendor, vendor_id,publisher,publisher_id]);
     res.redirect("/books_admin");
+});
+
+app.get("/upcoming_reservation",async (req,res)=>{
+    var next_date = new Date();
+    next_date.setDate(next_date.getDate()+1);
+    next_date = next_date.toLocaleDateString();
+    next_date = '_' + next_date.slice(0,next_date.indexOf('/'))+'_'+next_date.slice(next_date.indexOf('/')+1,next_date.lastIndexOf('/'))+'_'+next_date.slice(next_date.lastIndexOf('/')+1);
+    var date = new Date();
+    date.setDate(date.getDate());
+    date = date.toLocaleDateString();
+    date = '_' + date.slice(0,date.indexOf('/'))+'_'+date.slice(date.indexOf('/')+1,date.lastIndexOf('/'))+'_'+date.slice(date.lastIndexOf('/')+1);
+    const result11 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE first=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result12 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE second=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result13 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE third=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result14 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${date} WHERE fourth=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result21 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE first=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result22 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE second=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result23 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE third=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    const result24 = await new Promise((resolve,reject)=>{
+        const sql11 = `SELECT books FROM ${next_date} WHERE fourth=?`;
+        db.query(sql11,[name],(err,result)=>{
+            if(err){
+                return reject(err);
+            }
+            resolve(result);
+        });
+    });
+    res.render(__dirname+"/views/upcoming_reservations.ejs",{
+        Name: name,
+        email: email,
+        books: books,
+        r11: result11,
+        r12: result12,
+        r13: result13,
+        r14: result14,
+        r21: result21,
+        r22: result22,
+        r23: result23,
+        r24: result24
+    });
 });
 
 //Render terms_and_conditions.ejs file
