@@ -15,10 +15,10 @@ const saltRounds = 10;
 
 //Establish connection to MySQL database
 const db = mysql.createConnection({
-    host: "sql12.freemysqlhosting.net",
-    user: "sql12723936",
-    database: "sql12723936",
-    password: "fUCFp5Mjyj",
+    host: "sql12.freesqldatabase.com",
+    user: "sql12727285",
+    database: "sql12727285",
+    password: "uNr2BTAXu2",
     port: 3306,
 });
 
